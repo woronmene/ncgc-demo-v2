@@ -1,0 +1,15 @@
+[
+  {
+    "id": 1,
+    "name": "First bank plc",
+    "cbnLicense": "CBN7584778374",
+    "rcNumber": "RC5774837726",
+    "ndicNumber": "NDIC873645234",
+    "address": "11 Private Access Road",
+    "contactPerson": "Oritsemiworon Mene",
+    "contactEmail": "tech@firstbank.com",
+    "contactPhone": "",
+    "status": "Pending Review",
+    "onboardedAt": "2025-11-20T09:26:57.466Z"
+  }
+]

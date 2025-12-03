@@ -1,0 +1,91 @@
+[
+  {
+    "id": "app_1763632235145_aqcnjr",
+    "businessName": "Octussis Fashion",
+    "rcNumber": "RC1234534637",
+    "tinNumber": "TIN85748837",
+    "businessAddress": "No 5 Akinyemi Avenue, Lagos",
+    "sector": "Retail",
+    "loanAmount": "10000000",
+    "tenure": "12",
+    "purpose": "Expand the business",
+    "monthlyRevenue": "400000",
+    "kyc": {
+      "cac": "CAC675645532",
+      "bvn": "76435546734",
+      "nin": "98765746532",
+      "creditScore": null
+    },
+    "documents": {
+      "cacDoc": false,
+      "statement": false,
+      "idDoc": false
+    },
+    "status": "Approved",
+    "ncgc": {
+      "approved": true,
+      "guaranteePercentage": 87,
+      "comments": [],
+      "suggestedGuarantee": 77
+    },
+    "bank": {
+      "approved": false
+    },
+    "comments": [
+      {
+        "id": "msg_1763632616971",
+        "author": "ncgc",
+        "message": "Please provide your CAC certificate",
+        "timestamp": "2025-11-20T09:56:56.971Z"
+      },
+      {
+        "id": "sys_1763632647053",
+        "author": "ncgc",
+        "message": "Application approved with 87% guarantee.",
+        "timestamp": "2025-11-20T09:57:27.053Z"
+      },
+      {
+        "id": "msg_1763649889712",
+        "author": "bank",
+        "message": "Thanks",
+        "timestamp": "2025-11-20T14:44:49.712Z"
+      }
+    ],
+    "createdAt": "2025-11-20T09:50:35.145Z"
+  },
+  {
+    "id": "app_1763631332293_xiywif",
+    "businessName": "Octussis Technologies",
+    "rcNumber": "RC547364753",
+    "tinNumber": "TIN7684736647",
+    "businessAddress": "No 8 Akinyemi Avenue, Lagos",
+    "sector": "Technology",
+    "loanAmount": "20000000",
+    "tenure": "24",
+    "purpose": "Expand the business",
+    "monthlyRevenue": "1000000",
+    "kyc": {
+      "cac": "CAC5637466375",
+      "bvn": "78657645342",
+      "nin": "35467453423",
+      "creditScore": null
+    },
+    "documents": {
+      "cacDoc": false,
+      "statement": false,
+      "idDoc": false
+    },
+    "status": "pending_ncgc_review",
+    "ncgc": {
+      "approved": false,
+      "guaranteePercentage": null,
+      "comments": [],
+      "suggestedGuarantee": 82
+    },
+    "bank": {
+      "approved": false
+    },
+    "comments": [],
+    "createdAt": "2025-11-20T09:35:32.293Z"
+  }
+]
