@@ -67,7 +67,7 @@ export default function BankMakerLayout({ children }) {
 
         <div className="p-6 border-t border-gray-100">
           <button
-            className="flex items-center text-gray-600 hover:text-emerald-700 text-sm w-full"
+            className="flex items-center cursor-pointer text-gray-600 hover:text-emerald-700 text-sm w-full"
             onClick={() => {
               // placeholder logout behaviour — replace with real sign-out logic
               // e.g., call auth signout endpoint or redirect to /login

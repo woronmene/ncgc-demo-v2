@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function LoansPage() {
+  const router = useRouter();
   const [loans, setLoans] = useState([]);
 
   useEffect(() => {
@@ -39,10 +41,10 @@ export default function LoansPage() {
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-gray-100 text-sm">
+          <tbody  className="divide-y divide-gray-100 text-sm">
             {loans.length > 0 ? (
               loans.map((loan) => (
-                <tr key={loan.id} className="hover:bg-gray-50 transition">
+                <tr onClick={() => router.push(`/ncgc_analyst/loans/${loan.id}`)} key={loan.id} className="hover:bg-gray-50 cursor-pointer transition">
                   <td className="p-4 font-medium text-gray-800">
                     {loan.businessName}
                   </td>

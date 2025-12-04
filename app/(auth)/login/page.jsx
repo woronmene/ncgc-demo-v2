@@ -12,6 +12,12 @@ function CredentialModal({ isOpen, onClose }) {
   const [credentials, setCredentials] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const roleDescriptions = {
+    ncgc_admin: "Manages system settings and onboards banks.",
+    ncgc_analyst: "Reviews and approves guarantee applications.",
+    bank_maker: "Creates and submits loan guarantee applications.",
+  };
+
   useEffect(() => {
     if (!isOpen) return;
 
@@ -20,7 +26,14 @@ function CredentialModal({ isOpen, onClose }) {
     fetch("/api/users/credentials")
       .then((res) => res.json())
       .then((data) => {
-        if (data.ok) setCredentials(data.users);
+        if (data.ok) {
+          const allowedRoles = ["ncgc_admin", "ncgc_analyst", "bank_maker"];
+          // Filter and maybe deduplicate if needed, but for now just filter by role
+          const filtered = data.users.filter((u) =>
+            allowedRoles.includes(u.role)
+          );
+          setCredentials(filtered);
+        }
       })
       .catch(() => setCredentials([]))
       .finally(() => setLoading(false));
@@ -55,10 +68,17 @@ function CredentialModal({ isOpen, onClose }) {
                 key={index}
                 className="border border-gray-200 rounded-lg p-4 shadow-sm"
               >
-                <p className="font-medium text-gray-700">{cred.label}</p>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="font-medium text-gray-700">{cred.label}</p>
+                    <p className="text-xs text-gray-500 mt-1 italic">
+                      {roleDescriptions[cred.role] || "System User"}
+                    </p>
+                  </div>
+                </div>
 
                 {/* Email Row */}
-                <div className="flex items-center justify-between text-sm mt-2">
+                <div className="flex items-center justify-between text-sm mt-3">
                   <span className="text-gray-600">{cred.email}</span>
                   <button
                     type="button"

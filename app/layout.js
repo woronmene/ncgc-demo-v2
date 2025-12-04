@@ -16,6 +16,8 @@ export const metadata = {
   description: "NCGC Demo",
 };
 
+import DocumentationWidget from "./components/DocumentationWidget";
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
@@ -23,6 +25,7 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <DocumentationWidget />
       </body>
     </html>
   );

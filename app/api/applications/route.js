@@ -23,6 +23,7 @@ export async function GET() {
       createdAt: a.createdAt,
       ncgc: a.ncgc,
       tenure: a.tenure,
+      createdBy: a.createdBy,
     }));
 
     return NextResponse.json(list);

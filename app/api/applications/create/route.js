@@ -30,6 +30,9 @@ export async function POST(req) {
     const cookies = req.headers.get('cookie') || '';
     const userBankMatch = cookies.match(/userBank=([^;]+)/);
     const createdBy = userBankMatch ? decodeURIComponent(userBankMatch[1]) : 'Unknown';
+    
+    console.log("Creating application. Cookies found:", !!cookies);
+    console.log("Extracted createdBy:", createdBy);
 
     const newAppId = makeId();
     const newApp = {

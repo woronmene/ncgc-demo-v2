@@ -3,12 +3,13 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Plus, CheckCircle, Clock, XCircle } from "lucide-react";
+import { Plus, CheckCircle, Clock, XCircle, Loader2 } from "lucide-react";
 
 export default function BankMakerDashboardPage() {
   const router = useRouter();
   const [applications, setApplications] = useState([]);
   const [userBank, setUserBank] = useState("");
+  const [loading, setLoading] = useState(true);
 
   // Get user's bank from cookie
   useEffect(() => {
@@ -16,27 +17,48 @@ export default function BankMakerDashboardPage() {
       const cookies = document.cookie;
       const bankMatch = cookies.match(/userBank=([^;]+)/);
       if (bankMatch) {
-        setUserBank(decodeURIComponent(bankMatch[1]));
+        const bank = decodeURIComponent(bankMatch[1]);
+        console.log("Bank Maker Dashboard: Found userBank cookie:", bank);
+        setUserBank(bank);
+      } else {
+        console.log("Bank Maker Dashboard: No userBank cookie found");
+        setLoading(false); // Stop loading if no bank found (will show empty state)
       }
     }
   }, []);
 
   useEffect(() => {
     async function fetchApplications() {
+      if (!userBank) return;
+      
+      setLoading(true);
       try {
-        const res = await fetch("/api/applications");
+        console.log("Fetching applications for bank:", userBank);
+        const res = await fetch("/api/applications", { cache: "no-store" });
         const data = await res.json();
+        
         if (Array.isArray(data)) {
+          console.log("All applications fetched:", data.length);
           // Filter applications to show only those created by this PFI/bank
-          const filteredApps = userBank 
-            ? data.filter(app => app.createdBy === userBank)
-            : data;
+          const filteredApps = data.filter(app => {
+            // Case-insensitive comparison for robustness
+            const match = app.createdBy?.toLowerCase() === userBank.toLowerCase();
+            if (!match) {
+               console.log(`Skipping app ${app.id} created by ${app.createdBy} (expected ${userBank})`);
+            }
+            return match;
+          });
+          
+          console.log("Filtered applications:", filteredApps.length);
           setApplications(filteredApps);
         }
       } catch (err) {
         console.error("Error fetching applications:", err);
+      } finally {
+        setLoading(false);
       }
     }
+    
     if (userBank) {
       fetchApplications();
     }
@@ -111,7 +133,16 @@ export default function BankMakerDashboardPage() {
           </thead>
 
           <tbody className="divide-y divide-gray-100 text-sm">
-            {applications.length > 0 ? (
+            {loading ? (
+              <tr>
+                <td colSpan={6} className="p-12 text-center">
+                  <div className="flex flex-col items-center justify-center text-gray-500">
+                    <Loader2 className="animate-spin mb-2 text-emerald-600" size={32} />
+                    <p>Loading applications...</p>
+                  </div>
+                </td>
+              </tr>
+            ) : applications.length > 0 ? (
               applications.map((app) => (
                 <tr
                   key={app.id}

@@ -2,19 +2,22 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Plus, CheckCircle, Clock } from "lucide-react";
+import { Plus, CheckCircle, Clock, Loader2 } from "lucide-react";
 
 export default function AdminDashboardPage() {
   const [banks, setBanks] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchBanks() {
       try {
-        const res = await fetch("/api/banks");
+        const res = await fetch("/api/banks", { cache: "no-store" });
         const data = await res.json();
         if (Array.isArray(data)) setBanks(data);
       } catch (err) {
         console.error("Error fetching banks:", err);
+      } finally {
+        setLoading(false);
       }
     }
     fetchBanks();
@@ -45,7 +48,16 @@ export default function AdminDashboardPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 text-sm">
-            {banks.length > 0 ? (
+            {loading ? (
+              <tr>
+                <td colSpan={6} className="p-12 text-center">
+                  <div className="flex flex-col items-center justify-center text-gray-500">
+                    <Loader2 className="animate-spin mb-2 text-emerald-600" size={32} />
+                    <p>Loading banks...</p>
+                  </div>
+                </td>
+              </tr>
+            ) : banks.length > 0 ? (
               banks.map((bank) => (
                 <tr key={bank.id} className="hover:bg-gray-50">
                   <td className="p-4 font-medium text-gray-800">{bank.name}</td>

@@ -4,21 +4,24 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Plus, CheckCircle, Clock, XCircle } from "lucide-react";
+import { Plus, CheckCircle, Clock, XCircle, Loader2 } from "lucide-react";
 
 export default function AnalystDashboard() {
   const router = useRouter();
   const [applications, setApplications] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;
     async function load() {
       try {
-        const res = await fetch("/api/applications");
+        const res = await fetch("/api/applications", { cache: "no-store" });
         const data = await res.json();
         if (mounted && Array.isArray(data)) setApplications(data);
       } catch (err) {
         console.error("Error fetching applications:", err);
+      } finally {
+        if (mounted) setLoading(false);
       }
     }
     load();
@@ -79,7 +82,16 @@ export default function AnalystDashboard() {
           </thead>
 
           <tbody className="divide-y divide-gray-100 text-sm">
-            {applications.length > 0 ? (
+            {loading ? (
+              <tr>
+                <td colSpan={6} className="p-12 text-center">
+                  <div className="flex flex-col items-center justify-center text-gray-500">
+                    <Loader2 className="animate-spin mb-2 text-emerald-600" size={32} />
+                    <p>Loading applications...</p>
+                  </div>
+                </td>
+              </tr>
+            ) : applications.length > 0 ? (
               applications.map((app) => (
                 <tr 
                   key={app.id} 
