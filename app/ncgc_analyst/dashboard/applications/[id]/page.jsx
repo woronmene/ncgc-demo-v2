@@ -3,7 +3,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { CheckCircle, XCircle, FileText, Download, User, Eye, X, AlertTriangle, ShieldCheck } from "lucide-react";
+import { CheckCircle, XCircle, FileText, Download, User, Eye, X, AlertTriangle, ShieldCheck, ChevronLeft } from "lucide-react";
 
 export default function ApplicationDetailsPage() {
   const router = useRouter();
@@ -193,6 +193,14 @@ export default function ApplicationDetailsPage() {
 
   return (
     <div className="max-w-6xl mx-auto space-y-6 p-6">
+      <button
+        onClick={() => router.push("/ncgc_analyst/dashboard")}
+        className="flex items-center text-gray-500 hover:text-gray-700 transition-colors"
+      >
+        <ChevronLeft size={20} className="mr-1" />
+        Back to Dashboard
+      </button>
+
       {/* Header Card */}
       <div className="bg-white rounded-lg p-6 shadow">
         <div className="flex justify-between items-start">

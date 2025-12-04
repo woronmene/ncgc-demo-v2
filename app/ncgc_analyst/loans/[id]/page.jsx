@@ -2,11 +2,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import { AlertTriangle, CheckCircle, Info, XCircle } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import { AlertTriangle, CheckCircle, Info, XCircle, ChevronLeft } from "lucide-react";
 
 export default function LoanDetailsPage() {
   const params = useParams();
+  const router = useRouter();
   const id = params?.id;
 
   const [loan, setLoan] = useState(null);
@@ -100,6 +101,14 @@ export default function LoanDetailsPage() {
 
   return (
     <div className="space-y-8 text-black max-w-5xl mx-auto p-6">
+      <button
+        onClick={() => router.push("/ncgc_analyst/loans")}
+        className="flex items-center text-gray-500 hover:text-gray-700 transition-colors"
+      >
+        <ChevronLeft size={20} className="mr-1" />
+        Back to Loans
+      </button>
+
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-semibold text-gray-800">
           Loan Monitoring – {loan.businessName}

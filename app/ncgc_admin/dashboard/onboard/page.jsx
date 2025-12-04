@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Loader2, CheckCircle, Clock, XCircle, Copy } from "lucide-react";
+import { Loader2, CheckCircle, Clock, XCircle, Copy, ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function OnboardPFIPage() {
@@ -260,8 +260,15 @@ export default function OnboardPFIPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-100 p-10">
-      <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-10 space-y-10">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-100">
+      <div className="max-w-4xl  mx-auto bg-white rounded-2xl shadow-lg p-10 space-y-10">
+        <button
+          onClick={() => router.push("/ncgc_admin/dashboard")}
+          className="flex items-center text-gray-500 hover:text-gray-700 mb-4 transition-colors"
+        >
+          <ChevronLeft size={20} className="mr-1" />
+          Back to Dashboard
+        </button>
         <h1 className="text-2xl font-semibold text-gray-800">
           🏦 Onboard Participating Financial Institution (PFI)
         </h1>
