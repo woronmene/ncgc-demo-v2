@@ -41,15 +41,19 @@ export default function BankMakerLayout({ children }) {
 
       {/* Sidebar */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 flex flex-col justify-between h-full overflow-y-auto shrink-0 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-64  bg-[#f1f7f3] border-r border-gray-200 flex flex-col justify-between h-full overflow-y-auto shrink-0 transform transition-transform duration-300 ease-in-out ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }`}
       >
         <div>
           <div className="p-6 flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="h-10 w-10 rounded-full bg-emerald-700 flex items-center justify-center text-white font-bold text-lg">
-                B
+              <div className="h-12 w-12 flex items-center justify-center flex-shrink-0">
+                <img 
+                  src="/ncgc-logo.png" 
+                  alt="NCGC Logo" 
+                  className="h-12 w-12 object-contain"
+                />
               </div>
               <div>
                 <h2 className="text-lg font-semibold text-gray-800">
