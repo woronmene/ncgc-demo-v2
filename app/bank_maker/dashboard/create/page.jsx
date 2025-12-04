@@ -372,7 +372,7 @@ export default function CreateApplicationPage() {
     { id: 1, title: "Business Details" },
     { id: 2, title: "Identity & Verification" },
     { id: 3, title: "Required Documents" },
-    { id: 4, title: "Loan Request Details" },
+    { id: 4, title: "Request Details" },
   ];
 
   const nextStep = () => {
@@ -389,8 +389,16 @@ export default function CreateApplicationPage() {
   // UI
   // -------------------------------------------------
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-100 p-10">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-100">
       <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-10 space-y-8">
+        <button
+          onClick={() => router.push("/bank_maker/dashboard")}
+          className="flex items-center text-gray-500 hover:text-gray-700 mb-4 transition-colors"
+        >
+          <ChevronLeft size={20} className="mr-1" />
+          Back to Dashboard
+        </button>
+
         <h1 className="text-2xl font-semibold text-gray-800">
           Create New Loan Application
         </h1>

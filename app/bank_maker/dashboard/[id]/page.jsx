@@ -2,11 +2,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
-import { Loader2, Send, FileText, Download, CheckCircle, User, Eye, X } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import { Loader2, Send, FileText, Download, CheckCircle, User, Eye, X, ChevronLeft } from "lucide-react";
 
 export default function ApplicationDetailsPage() {
   const { id } = useParams();
+  const router = useRouter();
   const [app, setApp] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -79,6 +80,13 @@ export default function ApplicationDetailsPage() {
     <div className="p-10 max-w-6xl mx-auto space-y-8">
       {/* Header */}
       <div>
+        <button
+          onClick={() => router.push("/bank_maker/dashboard")}
+          className="flex items-center text-gray-500 hover:text-gray-700 mb-4 transition-colors"
+        >
+          <ChevronLeft size={20} className="mr-1" />
+          Back to Dashboard
+        </button>
         <h1 className="text-2xl font-semibold text-gray-800">
           Application Details
         </h1>

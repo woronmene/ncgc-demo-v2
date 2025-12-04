@@ -52,9 +52,9 @@ function CredentialModal({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-xl relative">
-        <h2 className="text-xl font-semibold mb-4 text-gray-800">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-xl relative max-h-[90vh] overflow-y-auto">
+        <h2 className="text-lg sm:text-xl font-semibold mb-4 text-gray-800">
           Demo Credentials
         </h2>
 
@@ -66,11 +66,11 @@ function CredentialModal({ isOpen, onClose }) {
             {credentials.map((cred, index) => (
               <div
                 key={index}
-                className="border border-gray-200 rounded-lg p-4 shadow-sm"
+                className="border border-gray-200 rounded-lg p-3 sm:p-4 shadow-sm"
               >
                 <div className="flex justify-between items-start">
                   <div>
-                    <p className="font-medium text-gray-700">{cred.label}</p>
+                    <p className="font-medium text-gray-700 text-sm sm:text-base">{cred.label}</p>
                     <p className="text-xs text-gray-500 mt-1 italic">
                       {roleDescriptions[cred.role] || "System User"}
                     </p>
@@ -78,11 +78,11 @@ function CredentialModal({ isOpen, onClose }) {
                 </div>
 
                 {/* Email Row */}
-                <div className="flex items-center justify-between text-sm mt-3">
-                  <span className="text-gray-600">{cred.email}</span>
+                <div className="flex items-center justify-between text-xs sm:text-sm mt-3 gap-2">
+                  <span className="text-gray-600 truncate">{cred.email}</span>
                   <button
                     type="button"
-                    className="flex items-center gap-1 text-emerald-600 hover:text-emerald-800 text-xs"
+                    className="flex items-center gap-1 text-emerald-600 hover:text-emerald-800 text-xs flex-shrink-0"
                     onClick={() =>
                       copyToClipboard(cred.email, `email-${index}`)
                     }
@@ -93,13 +93,13 @@ function CredentialModal({ isOpen, onClose }) {
                 </div>
 
                 {/* Password Row */}
-                <div className="flex items-center justify-between text-sm mt-1">
-                  <span className="text-gray-600">
+                <div className="flex items-center justify-between text-xs sm:text-sm mt-1 gap-2">
+                  <span className="text-gray-600 truncate">
                     Password: {cred.password}
                   </span>
                   <button
                     type="button"
-                    className="flex items-center gap-1 text-emerald-600 hover:text-emerald-800 text-xs"
+                    className="flex items-center gap-1 text-emerald-600 hover:text-emerald-800 text-xs flex-shrink-0"
                     onClick={() =>
                       copyToClipboard(cred.password, `password-${index}`)
                     }
@@ -115,7 +115,7 @@ function CredentialModal({ isOpen, onClose }) {
 
         <button
           onClick={onClose}
-          className="mt-6 w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-lg font-medium"
+          className="mt-6 w-full px-4 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium text-sm sm:text-base"
         >
           Close
         </button>
@@ -154,9 +154,9 @@ function ResetDemoModal({ isOpen, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full">
-        <h2 className="text-xl font-semibold text-gray-800 text-center mb-4">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-xl max-w-md w-full">
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-800 text-center mb-4">
           Reset Demo Data?
         </h2>
         <p className="text-gray-600 text-sm text-center">
@@ -165,10 +165,10 @@ function ResetDemoModal({ isOpen, onClose }) {
           This action cannot be undone.
         </p>
 
-        <div className="mt-6 flex space-x-3">
+        <div className="mt-6 flex flex-col sm:flex-row gap-3">
           <button
             onClick={onClose}
-            className="w-1/2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+            className="flex-1 px-4 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-medium text-sm sm:text-base"
           >
             Cancel
           </button>
@@ -176,7 +176,7 @@ function ResetDemoModal({ isOpen, onClose }) {
           <button
             onClick={handleReset}
             disabled={loading}
-            className={`w-1/2 px-4 py-2 rounded-lg text-white font-medium ${
+            className={`flex-1 px-4 py-2.5 rounded-lg text-white font-medium text-sm sm:text-base ${
               loading
                 ? "bg-red-300 cursor-not-allowed"
                 : "bg-red-600 hover:bg-red-700"
@@ -250,11 +250,11 @@ export default function AuthLogin() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-100 flex flex-col md:flex-row relative">
       {/* LEFT: Form Section */}
-      <div className="flex-1 flex flex-col justify-center px-12 py-16 md:pl-24">
-        <div className="max-w-lg">
-          <div className="flex items-center space-x-3 mb-8">
+      <div className="flex-1 flex flex-col justify-center px-6 sm:px-12 py-8 sm:py-16 md:pl-24">
+        <div className="max-w-lg w-full mx-auto md:mx-0">
+          <div className="flex items-center space-x-3 mb-6 sm:mb-8">
             <div>
-              <h1 className="text-3xl font-semibold text-gray-800">
+              <h1 className="text-2xl sm:text-3xl font-semibold text-gray-800">
                 Welcome back
               </h1>
               <p className="text-gray-500 text-sm mt-1">
@@ -263,7 +263,7 @@ export default function AuthLogin() {
             </div>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-6 ">
+          <form onSubmit={handleLogin} className="space-y-4 sm:space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-600 mb-2">
                 Email Address
@@ -301,65 +301,55 @@ export default function AuthLogin() {
                   : "bg-emerald-600 hover:bg-emerald-700"
               }`}
             >
-              {loading ? "Signing in..." : "Sign in"}
+              {loading ? "Signing in..." : "Sign In"}
             </button>
+          </form>
 
+          <div className="mt-6 sm:mt-8 space-y-3">
             <button
-              type="button"
               onClick={() => setShowCredModal(true)}
-              className="w-full mt-2 border text-black border-emerald-600 text-emerald-700 py-3 rounded-lg font-medium hover:bg-emerald-50"
+              className="w-full py-2.5 border border-emerald-600 text-emerald-700 rounded-lg hover:bg-emerald-50 font-medium text-sm"
             >
               View Demo Credentials
             </button>
-          </form>
+
+            <button
+              onClick={() => setShowResetModal(true)}
+              className="w-full py-2.5 border border-red-600 text-red-700 rounded-lg hover:bg-red-50 font-medium text-sm"
+            >
+              Reset Demo Data
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* RIGHT: Visual Section */}
-      <div className="hidden md:flex flex-1 bg-gradient-to-tr from-emerald-900 via-emerald-800 to-black text-white items-center justify-center px-12 py-16">
-        <div className="max-w-md text-center">
-          <div className="mx-auto mb-6 w-56 h-56 bg-gradient-to-br from-emerald-600 to-emerald-400 rounded-2xl flex items-center justify-center shadow-xl">
-            <svg
-              width="120"
-              height="120"
-              viewBox="0 0 24 24"
-              fill="none"
-              className="text-white opacity-95"
-            >
-              <path
-                d="M12 2C8 2 5 5 5 9v2h14V9c0-4-3-7-7-7z"
-                fill="currentColor"
-              />
-              <rect
-                x="4"
-                y="13"
-                width="16"
-                height="8"
-                rx="2"
-                fill="rgba(255,255,255,0.9)"
-              />
-            </svg>
+      {/* RIGHT: Branding Section */}
+      <div className="hidden md:flex flex-1 bg-gradient-to-br from-emerald-600 to-emerald-800 items-center justify-center p-12 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-white rounded-full -translate-y-1/2 translate-x-1/2"></div>
+          <div className="absolute bottom-0 left-0 w-80 h-80 bg-white rounded-full translate-y-1/2 -translate-x-1/2"></div>
+        </div>
+
+        <div className="relative z-10 text-center text-white max-w-md">
+          <div className="mb-6">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl mb-4">
+              <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-emerald-700 font-bold text-2xl">
+                N
+              </div>
+            </div>
           </div>
-          <h2 className="text-3xl font-semibold">
-            Manage Guarantees with Confidence
+
+          <h2 className="text-3xl font-bold mb-4">
+            National Credit Guarantee Corporation
           </h2>
-          <p className="mt-4 text-sm text-white/80">
-            Streamline loan guarantees, automate compliance, and ensure every
-            SME verification is simple and secure.
+          <p className="text-emerald-100 leading-relaxed">
+            Empowering MSMEs through innovative credit guarantee solutions.
+            Secure, reliable, and built for growth.
           </p>
         </div>
       </div>
 
-      {/* FLOATING RESET BUTTON — bottom-left */}
-      <div
-        type="button"
-        onClick={() => setShowResetModal(true)}
-        className="absolute bottom-6 left-6 px-4 py-2  text-red-500 cursor-pointer z-40 text-sm font-medium"
-      >
-        Reset Demo
-      </div>
-
-      {/* MODALS */}
+      {/* Modals */}
       <CredentialModal
         isOpen={showCredModal}
         onClose={() => setShowCredModal(false)}
