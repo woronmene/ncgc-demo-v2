@@ -8,6 +8,26 @@ export default function DocumentationWidget() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [content, setContent] = useState(null);
+  const [shake, setShake] = useState(false);
+
+  // Trigger shake animation: initial 3s delay, then every 10s
+  useEffect(() => {
+    const triggerShake = () => {
+      setShake(true);
+      setTimeout(() => setShake(false), 1000); // Reset after animation duration
+    };
+
+    let intervalId;
+    const timeoutId = setTimeout(() => {
+      triggerShake();
+      intervalId = setInterval(triggerShake, 10000);
+    }, 3000);
+
+    return () => {
+      clearTimeout(timeoutId);
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, []);
 
   // Define documentation content for different routes
   const docs = {
@@ -209,7 +229,7 @@ export default function DocumentationWidget() {
       {/* Floating Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 bg-emerald-600 hover:bg-emerald-700 text-white p-3 rounded-full shadow-lg z-50 flex items-center gap-2 transition-all hover:scale-105"
+        className={`fixed bottom-6 right-6 bg-emerald-600 hover:bg-emerald-700 text-white p-3 rounded-full shadow-lg z-50 flex items-center gap-2 transition-all hover:scale-105 ${shake ? 'animate-shake' : ''}`}
         title="Page Documentation"
       >
         <BookOpen size={24} />
