@@ -250,9 +250,17 @@ export default function AuthLogin() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-100 flex flex-col md:flex-row relative">
       {/* LEFT: Form Section */}
-      <div className="flex-1 flex flex-col justify-center px-6 sm:px-12 py-8 sm:py-16 md:pl-24">
+      <div className="flex-1 flex flex-col justify-center px-6 sm:px-12 py-8 sm:py-16 md:pl-24 bg-[#f1f7f3]">
         <div className="max-w-lg w-full mx-auto md:mx-0">
+          {/* Logo and Title */}
           <div className="flex items-center space-x-3 mb-6 sm:mb-8">
+            <div className="h-24 w-24 flex items-center justify-center flex-shrink-0">
+              <img 
+                src="/ncgc-logo.png" 
+                alt="NCGC Logo" 
+                className="h-24 w-24 object-contain"
+              />
+            </div>
             <div>
               <h1 className="text-2xl sm:text-3xl font-semibold text-gray-800">
                 Welcome back
@@ -331,11 +339,13 @@ export default function AuthLogin() {
         </div>
 
         <div className="relative z-10 text-center text-white max-w-md">
-          <div className="mb-6">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl mb-4">
-              <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-emerald-700 font-bold text-2xl">
-                N
-              </div>
+          <div className="mb-8">
+            <div className="inline-flex items-center justify-center w-40 h-40 bg-white/10 backdrop-blur-sm rounded-3xl mb-6 p-8">
+              <img 
+                src="/ncgc-logo.png" 
+                alt="NCGC Logo" 
+                className="w-full h-full object-contain"
+              />
             </div>
           </div>
 
