@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Copy } from "lucide-react";
+import Link from "next/link";
+import { Copy, BookOpen } from "lucide-react";
 
 /* ---------------------------------------------------
    MODAL: VIEW DEMO CREDENTIALS
@@ -249,6 +250,17 @@ export default function AuthLogin() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-100 flex flex-col md:flex-row relative">
+      {/* Documentation Link - Top Left */}
+      <Link
+        href="/documentation"
+        className="absolute top-4 left-4 z-10 flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm border border-emerald-200 rounded-lg shadow-sm hover:bg-emerald-50 hover:border-emerald-300 transition-all group"
+      >
+        <BookOpen className="text-emerald-600 group-hover:text-emerald-700" size={18} />
+        <span className="text-sm font-medium text-emerald-700 group-hover:text-emerald-800">
+          Documentation
+        </span>
+      </Link>
+
       {/* LEFT: Form Section */}
       <div className="flex-1 flex flex-col justify-center px-6 sm:px-12 py-8 sm:py-16 md:pl-24 bg-[#f1f7f3]">
         <div className="max-w-lg w-full mx-auto md:mx-0">
