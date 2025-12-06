@@ -56,6 +56,121 @@ export default function DocumentationPage() {
           </div>
         </div>
 
+        {/* Guide Button Section - Prominent */}
+        <section
+          id="guide-button"
+          className="bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-xl shadow-xl p-8 mb-8 text-white border-2 border-emerald-400"
+        >
+          <div className="flex items-start gap-4">
+            <div className="p-3 bg-white/20 rounded-lg backdrop-blur-sm flex-shrink-0">
+              <BookOpen size={32} className="text-white" />
+            </div>
+            <div className="flex-1">
+              <h2 className="text-2xl font-bold mb-3 flex items-center gap-2">
+                <span className="bg-white/20 px-3 py-1 rounded-full text-sm">
+                  ESSENTIAL
+                </span>
+                The Guide Button - Your Context-Sensitive Helper
+              </h2>
+              <p className="text-emerald-50 text-lg mb-4 leading-relaxed">
+                <strong className="text-white">
+                  Look for the green "Guide" button in the bottom-right corner
+                  of every page.
+                </strong>
+                This is your instant, context-sensitive help system that
+                provides page-specific guidance wherever you are in the
+                platform.
+              </p>
+
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-5 mt-4 border border-white/20">
+                <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
+                  <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                  What It Does
+                </h3>
+                <ul className="space-y-2 text-emerald-50">
+                  <li className="flex items-start gap-2">
+                    <span className="text-white font-bold mt-1">•</span>
+                    <span>
+                      <strong className="text-white">
+                        Context-Sensitive Help:
+                      </strong>{" "}
+                      The Guide button automatically shows relevant information
+                      for the page you're currently viewing. Each page has its
+                      own customized guide content.
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-white font-bold mt-1">•</span>
+                    <span>
+                      <strong className="text-white">Always Available:</strong>{" "}
+                      The button appears on every page in the bottom-right
+                      corner, so help is never more than one click away.
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-white font-bold mt-1">•</span>
+                    <span>
+                      <strong className="text-white">
+                        Attention-Grabbing:
+                      </strong>{" "}
+                      The button gently shakes after a few seconds to remind you
+                      it's available if you need help.
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-white font-bold mt-1">•</span>
+                    <span>
+                      <strong className="text-white">Quick Reference:</strong>{" "}
+                      Instead of scrolling through this full documentation,
+                      click the Guide button for instant, page-specific tips and
+                      instructions.
+                    </span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-5 mt-4 border border-white/20">
+                <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
+                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                  How to Use It
+                </h3>
+                <ol className="space-y-2 text-emerald-50 list-decimal list-inside">
+                  <li>
+                    <strong className="text-white">Locate the Button:</strong>{" "}
+                    Look for the green circular button with a book icon in the
+                    bottom-right corner of any page. On larger screens, it will
+                    also show the word "Guide".
+                  </li>
+                  <li>
+                    <strong className="text-white">Click to Open:</strong> Click
+                    the button to open a helpful panel with information specific
+                    to the page you're viewing.
+                  </li>
+                  <li>
+                    <strong className="text-white">Read the Guidance:</strong>{" "}
+                    The panel shows a description of the page and organized
+                    sections with tips and instructions relevant to that
+                    specific page.
+                  </li>
+                  <li>
+                    <strong className="text-white">Close When Done:</strong>{" "}
+                    Click the X button or click outside the panel to close it
+                    and continue working.
+                  </li>
+                </ol>
+              </div>
+
+              <div className="mt-5 p-4 bg-white/20 rounded-lg border border-white/30">
+                <p className="text-white font-semibold text-center">
+                  💡 <strong>Pro Tip:</strong> Use the Guide button as your
+                  first stop when you're unsure about what to do on any page.
+                  It's faster than searching through this full documentation!
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Table of Contents */}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-100">
           <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
@@ -63,6 +178,14 @@ export default function DocumentationPage() {
             Table of Contents
           </h2>
           <ul className="space-y-2 text-gray-700">
+            <li>
+              <a
+                href="#guide-button"
+                className="text-emerald-600 hover:underline font-semibold"
+              >
+                ⭐ The Guide Button (Read This First!)
+              </a>
+            </li>
             <li>
               <a href="#overview" className="text-emerald-600 hover:underline">
                 1. Project Overview
@@ -360,6 +483,17 @@ export default function DocumentationPage() {
             5. Key Features
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
+            <div className="border-2 border-emerald-500 rounded-lg p-5 bg-emerald-50">
+              <h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                <BookOpen className="text-emerald-600" size={18} />
+                Context-Sensitive Guide Button
+              </h3>
+              <p className="text-sm text-gray-600">
+                A floating help button on every page that provides instant,
+                page-specific guidance. Click it anytime for quick tips and
+                instructions relevant to what you're currently viewing.
+              </p>
+            </div>
             <div className="border border-gray-200 rounded-lg p-5">
               <h3 className="font-semibold text-gray-800 mb-2">
                 Real-time KYC Verification

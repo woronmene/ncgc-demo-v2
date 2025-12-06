@@ -71,7 +71,9 @@ function CredentialModal({ isOpen, onClose }) {
               >
                 <div className="flex justify-between items-start">
                   <div>
-                    <p className="font-medium text-gray-700 text-sm sm:text-base">{cred.label}</p>
+                    <p className="font-medium text-gray-700 text-sm sm:text-base">
+                      {cred.label}
+                    </p>
                     <p className="text-xs text-gray-500 mt-1 italic">
                       {roleDescriptions[cred.role] || "System User"}
                     </p>
@@ -232,12 +234,16 @@ export default function AuthLogin() {
       }
 
       // Store user info in cookies for session management
-      if (typeof document !== 'undefined') {
+      if (typeof document !== "undefined") {
         document.cookie = `userRole=${data.user.role}; path=/; max-age=86400`; // 24 hours
         if (data.user.bank) {
-          document.cookie = `userBank=${encodeURIComponent(data.user.bank)}; path=/; max-age=86400`;
+          document.cookie = `userBank=${encodeURIComponent(
+            data.user.bank
+          )}; path=/; max-age=86400`;
         }
-        document.cookie = `userEmail=${encodeURIComponent(data.user.email)}; path=/; max-age=86400`;
+        document.cookie = `userEmail=${encodeURIComponent(
+          data.user.email
+        )}; path=/; max-age=86400`;
       }
 
       router.push(`${encodeURIComponent(data.user.role)}/dashboard`);
@@ -255,7 +261,10 @@ export default function AuthLogin() {
         href="/documentation"
         className="absolute top-4 left-4 z-10 flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm border border-emerald-200 rounded-lg shadow-sm hover:bg-emerald-50 hover:border-emerald-300 transition-all group"
       >
-        <BookOpen className="text-emerald-600 group-hover:text-emerald-700" size={18} />
+        <BookOpen
+          className="text-emerald-600 group-hover:text-emerald-700"
+          size={18}
+        />
         <span className="text-sm font-medium text-emerald-700 group-hover:text-emerald-800">
           Documentation
         </span>
@@ -267,9 +276,9 @@ export default function AuthLogin() {
           {/* Logo and Title */}
           <div className="flex items-center space-x-3 mb-6 sm:mb-8">
             <div className="h-24 w-24 flex items-center justify-center flex-shrink-0">
-              <img 
-                src="/ncgc-logo.png" 
-                alt="NCGC Logo" 
+              <img
+                src="/ncgc-logo.png"
+                alt="NCGC Logo"
                 className="h-24 w-24 object-contain"
               />
             </div>
@@ -278,7 +287,14 @@ export default function AuthLogin() {
                 Welcome back
               </h1>
               <p className="text-gray-500 text-sm mt-1">
-                Sign in to your NCGC Account
+                Sign in to your NCGC Account (
+                <Link
+                  href="/documentation"
+                  className="text-emerald-600 hover:text-emerald-700 font-medium underline underline-offset-2 transition-colors"
+                >
+                  please read documentation
+                </Link>{" "}
+                )
               </p>
             </div>
           </div>
@@ -353,9 +369,9 @@ export default function AuthLogin() {
         <div className="relative z-10 text-center text-white max-w-md">
           <div className="mb-8">
             <div className="inline-flex items-center justify-center w-40 h-40 bg-white/10 backdrop-blur-sm rounded-3xl mb-6 p-8">
-              <img 
-                src="/ncgc-logo.png" 
-                alt="NCGC Logo" 
+              <img
+                src="/ncgc-logo.png"
+                alt="NCGC Logo"
                 className="w-full h-full object-contain"
               />
             </div>
