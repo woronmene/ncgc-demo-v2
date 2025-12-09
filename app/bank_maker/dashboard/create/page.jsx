@@ -60,6 +60,7 @@ export default function CreateApplicationPage() {
     incorporationCert: null,
     taxClearance: null,
     performanceBond: null,
+    collateral: null,
   });
 
   const handleFileChange = async (field, file, ownerId = null) => {
@@ -339,6 +340,7 @@ export default function CreateApplicationPage() {
           incorporationCert: documents.incorporationCert,
           taxClearance: documents.taxClearance,
           performanceBond: documents.performanceBond,
+          collateral: documents.collateral,
         }
       };
       
@@ -400,7 +402,7 @@ export default function CreateApplicationPage() {
         </button>
 
         <h1 className="text-2xl font-semibold text-gray-800">
-          Create New Loan Application
+          Create New Loan Guarantee Application
         </h1>
 
         {/* Progress Bar */}
@@ -711,15 +713,18 @@ export default function CreateApplicationPage() {
               <h2 className="text-lg font-semibold text-gray-700 mb-4">
                 Required Documents
               </h2>
+              <p className="text-sm text-gray-600 mb-4">
+                Upload the required documents for this loan guarantee application.
+              </p>
               <div className="space-y-4">
                 <DocumentUploadField
-                  label="Certificate of Incorporation"
+                  label="Certificate of Incorporation *"
                   field="incorporationCert"
                   documentState={documents.incorporationCert}
                   onUpload={handleFileChange}
                 />
                 <DocumentUploadField
-                  label="Tax Clearance Certificate"
+                  label="Tax Clearance Certificate *"
                   field="taxClearance"
                   documentState={documents.taxClearance}
                   onUpload={handleFileChange}
@@ -730,6 +735,15 @@ export default function CreateApplicationPage() {
                   documentState={documents.performanceBond}
                   onUpload={handleFileChange}
                 />
+                <DocumentUploadField
+                  label="Collateral Documents (If Applicable)"
+                  field="collateral"
+                  documentState={documents.collateral}
+                  onUpload={handleFileChange}
+                />
+                <p className="text-xs text-gray-500 italic">
+                  * Required documents. Collateral documents should be uploaded if the guarantee request involves any collateral.
+                </p>
               </div>
             </div>
           )}
@@ -740,7 +754,7 @@ export default function CreateApplicationPage() {
           {currentStep === 4 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
               <h2 className="text-lg font-semibold text-gray-700 mb-4">
-                Loan Request Details
+                Loan Guarantee Request Details
               </h2>
 
               <div className="space-y-6">
@@ -868,7 +882,7 @@ export default function CreateApplicationPage() {
                   Application Submitted Successfully
                 </h2>
                 <p className="text-center text-gray-600 mb-6">
-                  Your loan application has been sent to NCGC for review.
+                  Your loan guarantee application has been sent to NCGC for review.
                 </p>
 
                 <div className="flex justify-center">

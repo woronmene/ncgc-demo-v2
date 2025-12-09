@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Building2, Users, Settings, LogOut, Menu, X } from "lucide-react";
@@ -8,6 +8,21 @@ import { Building2, Users, Settings, LogOut, Menu, X } from "lucide-react";
 export default function AdminLayout({ children }) {
   const pathname = usePathname() || "";
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [userRole, setUserRole] = useState(null);
+
+  useEffect(() => {
+    // Get user role from cookie
+    if (typeof document !== "undefined") {
+      const cookies = document.cookie.split("; ");
+      const roleCookie = cookies.find((c) => c.startsWith("userRole="));
+      if (roleCookie) {
+        setUserRole(roleCookie.split("=")[1]);
+      }
+    }
+  }, []);
+
+  const isPFIOnboarding =
+    userRole === "pfi_onboard" || pathname.includes("/onboard");
 
   // Nav items use base paths so child routes still match with startsWith
   const navItems = [
@@ -46,13 +61,15 @@ export default function AdminLayout({ children }) {
           <div className="p-6 flex items-center justify-between ">
             <div className="flex items-center space-x-2">
               <div className="h-12 w-12 flex items-center justify-center flex-shrink-0">
-                <img 
-                  src="/ncgc-logo.png" 
-                  alt="NCGC Logo" 
+                <img
+                  src="/ncgc-logo.png"
+                  alt="NCGC Logo"
                   className="h-12 w-12 object-contain"
                 />
               </div>
-              <h2 className="text-lg font-semibold text-gray-800">NCGC Admin</h2>
+              <h2 className="text-lg font-semibold text-gray-800">
+                {isPFIOnboarding ? "PFI  Portal" : "PFI  Portal"}
+              </h2>
             </div>
             <button
               onClick={closeSidebar}
@@ -62,24 +79,25 @@ export default function AdminLayout({ children }) {
             </button>
           </div>
           <nav className="mt-6">
-            {navItems.map((item) => {
-              const active = isActive(item.href);
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  onClick={closeSidebar}
-                  className={`flex items-center px-6 py-3 text-sm font-medium ${
-                    active
-                      ? "bg-emerald-50 text-emerald-700 border-r-4 border-emerald-600"
-                      : "text-gray-600 hover:bg-emerald-50 hover:text-emerald-700"
-                  }`}
-                >
-                  <span className="mr-3">{item.icon}</span>
-                  {item.name}
-                </Link>
-              );
-            })}
+            {!isPFIOnboarding &&
+              navItems.map((item) => {
+                const active = isActive(item.href);
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    onClick={closeSidebar}
+                    className={`flex items-center px-6 py-3 text-sm font-medium ${
+                      active
+                        ? "bg-emerald-50 text-emerald-700 border-r-4 border-emerald-600"
+                        : "text-gray-600 hover:bg-emerald-50 hover:text-emerald-700"
+                    }`}
+                  >
+                    <span className="mr-3">{item.icon}</span>
+                    {item.name}
+                  </Link>
+                );
+              })}
           </nav>
         </div>
 
@@ -106,7 +124,9 @@ export default function AdminLayout({ children }) {
           >
             <Menu size={24} />
           </button>
-          <h1 className="text-lg font-semibold text-gray-800">NCGC Admin</h1>
+          <h1 className="text-lg font-semibold text-gray-800">
+            {isPFIOnboarding ? "PFI Console Portal" : "NCGC Admin"}
+          </h1>
           <div className="w-6" /> {/* Spacer for centering */}
         </div>
 

@@ -6,6 +6,17 @@ import { useRouter } from "next/navigation";
 
 export default function OnboardPFIPage() {
   const router = useRouter();
+  const [isPFIOnboarding, setIsPFIOnboarding] = useState(false);
+
+  useEffect(() => {
+    // Check if user is PFI onboarding
+    if (typeof document !== "undefined") {
+      const cookies = document.cookie.split("; ");
+      const roleCookie = cookies.find((c) => c.startsWith("userRole="));
+      const userRole = roleCookie ? roleCookie.split("=")[1] : null;
+      setIsPFIOnboarding(userRole === "pfi_onboard");
+    }
+  }, []);
 
   const [form, setForm] = useState({
     pfiName: "",
@@ -256,22 +267,38 @@ export default function OnboardPFIPage() {
 
   const closeModal = () => {
     setModalData(null);
-    router.push("/ncgc_admin/dashboard");
+    if (isPFIOnboarding) {
+      router.push("/login");
+    } else {
+      router.push("/ncgc_admin/dashboard");
+    }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-100">
       <div className="max-w-4xl  mx-auto bg-white rounded-2xl shadow-lg p-10 space-y-10">
         <button
-          onClick={() => router.push("/ncgc_admin/dashboard")}
+          onClick={() => {
+            if (isPFIOnboarding) {
+              router.push("/login");
+            } else {
+              router.push("/ncgc_admin/dashboard");
+            }
+          }}
           className="flex items-center text-gray-500 hover:text-gray-700 mb-4 transition-colors"
         >
           <ChevronLeft size={20} className="mr-1" />
-          Back to Dashboard
+          {isPFIOnboarding ? "Back to Login" : "Back to Dashboard"}
         </button>
         <h1 className="text-2xl font-semibold text-gray-800">
           🏦 Onboard Participating Financial Institution (PFI)
         </h1>
+        {isPFIOnboarding && (
+          <p className="text-gray-600 text-sm mt-2">
+            Complete the form below to register your institution as a Partner Financial Institution (PFI) with NCGC. 
+            Once all required fields are correctly provided, your onboarding will be automatically approved.
+          </p>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-10">
 
@@ -397,7 +424,7 @@ export default function OnboardPFIPage() {
                   : "bg-emerald-600 hover:bg-emerald-700"
               }`}
             >
-              {submitting ? "Submitting..." : "Onboard PFI"}
+              {submitting ? "Submitting..." : isPFIOnboarding ? "Submit Onboarding Request" : "Onboard PFI"}
             </button>
           </div>
         </form>
@@ -413,17 +440,57 @@ export default function OnboardPFIPage() {
                   <CheckCircle className="text-emerald-600" size={48} />
                 </div>
                 <h2 className="text-xl font-semibold text-gray-800 text-center mb-2">
-                  PFI Onboarded Successfully
+                  {isPFIOnboarding ? "Onboarding Successful" : "PFI Onboarded Successfully"}
                 </h2>
-                <p className="text-center text-gray-600 mb-6">
-                  {modalData.pfi?.name} has been added.
+                <p className="text-center text-gray-600 mb-4">
+                  {isPFIOnboarding 
+                    ? `${modalData.pfi?.name} has been successfully onboarded and approved.`
+                    : `${modalData.pfi?.name} has been added.`
+                  }
                 </p>
+                {isPFIOnboarding && modalData.credentials && modalData.credentials.length > 0 && (
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 mb-4">
+                    <p className="text-sm font-semibold text-emerald-800 mb-2">
+                      Your login credentials have been created:
+                    </p>
+                    {modalData.credentials.map((cred, idx) => (
+                      <div key={idx} className="mb-2 last:mb-0">
+                        <p className="text-xs text-emerald-700 font-medium">{cred.label}:</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-xs text-emerald-600 flex-1">{cred.email}</span>
+                          <button
+                            onClick={() => copyToClipboard(cred.email)}
+                            className="text-emerald-600 hover:text-emerald-800"
+                            title="Copy email"
+                          >
+                            <Copy size={14} />
+                          </button>
+                        </div>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-xs text-emerald-600 flex-1">Password: {cred.password}</span>
+                          <button
+                            onClick={() => copyToClipboard(cred.password)}
+                            className="text-emerald-600 hover:text-emerald-800"
+                            title="Copy password"
+                          >
+                            <Copy size={14} />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {isPFIOnboarding && (
+                  <p className="text-center text-sm text-gray-500 mb-6">
+                    You can now use these credentials to log in and create applications.
+                  </p>
+                )}
                 <div className="mt-6 flex justify-center">
                   <button
                     onClick={closeModal}
                     className="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium"
                   >
-                    Done
+                    {isPFIOnboarding ? "Go to Login" : "Done"}
                   </button>
                 </div>
               </>

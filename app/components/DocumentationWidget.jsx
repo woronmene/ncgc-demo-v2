@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { BookOpen, X, HelpCircle, ChevronRight } from "lucide-react";
+import { BookOpen, X, HelpCircle, ChevronRight, ExternalLink } from "lucide-react";
+import Link from "next/link";
 
 export default function DocumentationWidget() {
   const pathname = usePathname();
@@ -38,7 +39,8 @@ export default function DocumentationWidget() {
         {
           title: "Available Roles",
           items: [
-            "NCGC Admin: Logs in to onboard new Partner Financial Institutions (PFIs).",
+            "PFI Onboarding: Use generic credentials to onboard your financial institution as a PFI.",
+            "NCGC Admin: Manages system settings and views onboarded PFIs.",
             "NCGC Analyst: Reviews, approves, and monitors guarantee applications.",
             "Bank Maker: Represents a PFI. Creates and submits loan guarantee applications."
           ]
@@ -47,7 +49,7 @@ export default function DocumentationWidget() {
           title: "How to Test",
           items: [
             "Click 'View Demo Credentials' to see available users.",
-            "To test the full flow: Login as Admin -> Onboard a Bank -> Logout -> Login as that Bank's Maker -> Create Application -> Logout -> Login as Analyst -> Approve Application."
+            "To test the full flow: Login with PFI onboarding credentials -> Complete onboarding -> Logout -> Login as that Bank's Maker -> Create Application -> Logout -> Login as Analyst -> Approve Application."
           ]
         }
       ]
@@ -66,21 +68,25 @@ export default function DocumentationWidget() {
       ]
     },
     "/ncgc_admin/dashboard/onboard": {
-      title: "Onboard New PFI",
-      description: "Register a new Partner Financial Institution into the NCGC ecosystem.",
+      title: "PFI Console Portal - Self-Onboarding",
+      description: "Register your financial institution as a Partner Financial Institution (PFI) with NCGC. PFIs onboard themselves through this portal.",
       sections: [
         {
           title: "Process",
           items: [
-            "Fill in the institution's details (Name, License, etc.).",
+            "Fill in your institution's details (Name, License, etc.).",
             "The system automatically validates regulatory numbers (simulated).",
-            "Upon success, login credentials for this bank (Maker & Approver) are generated automatically."
+            "Once all required fields are correctly provided, your onboarding is automatically approved.",
+            "Upon success, login credentials for your institution (Maker & Approver) are generated automatically."
           ]
         },
         {
           title: "Important",
           items: [
-            "The Credentials will automatically be added to the credentials in the login page when you click on 'View Demo Credentials'. Just take note of the name of the PFI you just onboarded."
+            "This is a self-service onboarding process. You initiate and complete the onboarding yourself.",
+            "Approval is automatic once all required fields are correctly provided.",
+            "The credentials will automatically be added to the credentials in the login page when you click on 'View Demo Credentials'.",
+            "After onboarding, use the generated credentials to log in and create applications."
           ]
         }
       ]
@@ -105,16 +111,24 @@ export default function DocumentationWidget() {
       ]
     },
     "/bank_maker/dashboard/create": {
-      title: "Create Application",
-      description: "Submit a new loan guarantee request to NCGC.",
+      title: "Create Loan Guarantee Application",
+      description: "Submit a new loan guarantee request to NCGC. Note: This is a loan guarantee application, not a direct loan application.",
       sections: [
         {
           title: "Steps",
           items: [
             "1. Business Details: Basic info about the SME.",
             "2. Identity: Directors/Owners info and KYC (BVN/NIN validation).",
-            "3. Documents: Upload required files (simulated).",
-            "4. Loan Details: Amount, tenor, and guarantee type."
+            "3. Documents: Upload required files including Certificate of Incorporation, Tax Clearance, Performance Bond (if applicable), and Collateral Documents (if applicable).",
+            "4. Loan Guarantee Request Details: Amount, tenor, and guarantee type."
+          ]
+        },
+        {
+          title: "Important Notes",
+          items: [
+            "Collateral Documents are optional - only upload if the loan includes collateral.",
+            "Performance Bond is also optional but can improve risk assessment scores.",
+            "All uploaded documents are stored securely and reviewed by NCGC analysts."
           ]
         }
       ]
@@ -141,28 +155,191 @@ export default function DocumentationWidget() {
     },
     "/ncgc_analyst/dashboard/applications": { // Fallback for dynamic routes
       title: "Application Review",
-      description: "Detailed assessment of a specific guarantee application.",
+      description: "Detailed assessment of a specific loan guarantee application, including risk scoring and claim information.",
       sections: [
         {
           title: "Review Process",
           items: [
             "Verify business and owner details.",
-            "Preview uploaded documents (click the eye icon).",
-            "Use the 'Risk Assessment' tool to simulate risk scoring.",
+            "Preview uploaded documents including collateral (if applicable).",
+            "Use the 'Risk Assessment' tool to calculate risk scores based on multiple factors.",
+            "Review the risk breakdown: Credit Score, Performance Bond, Collateral, and Sector Priority.",
             "Approve or Reject the application based on your findings."
+          ]
+        },
+        {
+          title: "Risk Assessment",
+          items: [
+            "Credit Score: Simulated score (60-80 range) based on credit history.",
+            "Performance Bond: +10 points if uploaded.",
+            "Collateral Documents: +10 points if uploaded.",
+            "Sector Priority: Points vary based on thematic area (Youth-led/Women-led/Green Energy: 20pts, Agriculture: 15pts, etc.).",
+            "Total risk score determines suggested guarantee coverage percentage."
+          ]
+        },
+        {
+          title: "Claim Information",
+          items: [
+            "If a claim has been submitted for this application, view claim details here.",
+            "Click 'View Full Claim' to review and process the claim.",
+            "Claims appear when PFIs submit them for defaulted loans."
           ]
         }
       ]
     },
     "/ncgc_analyst/loans": {
       title: "Loan Monitoring",
-      description: "Track the performance of active guarantees.",
+      description: "Track the performance of active guarantees and monitor repayment status.",
       sections: [
         {
           title: "Features",
           items: [
-            "View repayment schedules and status.",
-            "Simulate loan performance (Days Past Due) to see how it affects risk grading."
+            "View all ongoing loans across all PFIs.",
+            "Monitor repayment schedules and payment status.",
+            "Click on any loan to view detailed performance metrics."
+          ]
+        }
+      ]
+    },
+    "/ncgc_analyst/loans/[id]": {
+      title: "Loan Details & Monitoring",
+      description: "Detailed view of a specific loan's performance, including repayment tracking and claim management.",
+      sections: [
+        {
+          title: "Repayment Tracking",
+          items: [
+            "View the complete repayment schedule.",
+            "Use the 'Days Past Due' slider to simulate loan performance (0-200 days).",
+            "Monitor when loans exceed 180 days past due (default threshold)."
+          ]
+        },
+        {
+          title: "Claims",
+          items: [
+            "View claim information if a claim has been submitted for this loan.",
+            "Click 'View Full Claim' to review and process the claim.",
+            "Claims can be initiated by PFIs when DPD exceeds 180 days."
+          ]
+        }
+      ]
+    },
+    "/ncgc_analyst/claims": {
+      title: "Claims Management",
+      description: "View and manage all claims submitted by PFIs for defaulted loans.",
+      sections: [
+        {
+          title: "Overview",
+          items: [
+            "View all claims across all PFIs.",
+            "See claim status: Pending, Approved, Rejected, or Paid.",
+            "Filter and review claims that need attention."
+          ]
+        },
+        {
+          title: "Actions",
+          items: [
+            "Click 'View Details' to review a specific claim.",
+            "Approve or reject claims based on documentation and validity.",
+            "Process payments for approved claims."
+          ]
+        }
+      ]
+    },
+    "/ncgc_analyst/claims/[id]": {
+      title: "Claim Review & Decision",
+      description: "Review claim details, verify documentation, and make approval/rejection decisions.",
+      sections: [
+        {
+          title: "Review Process",
+          items: [
+            "Review all claim information including default date, reason, and outstanding amounts.",
+            "Check supporting documents uploaded by the PFI.",
+            "Verify the claim amount against the guaranteed portion.",
+            "Review actions taken by the PFI before default."
+          ]
+        },
+        {
+          title: "Decision Making",
+          items: [
+            "Approve: Click 'Approve Claim' to approve and process payment. A confirmation dialog will show the payment amount.",
+            "Reject: Click 'Reject Claim' and provide review comments explaining the rejection.",
+            "Payment: Approved claims are automatically marked as paid with a payment reference."
+          ]
+        },
+        {
+          title: "Recovery Process",
+          items: [
+            "After approving and paying a claim, you can initiate a recovery process.",
+            "Click 'Start Recovery Process' to begin tracking recovery efforts.",
+            "Recovery allows NCGC to attempt to recover funds from the defaulting borrower."
+          ]
+        }
+      ]
+    },
+    "/ncgc_analyst/recovery": {
+      title: "Recovery Management",
+      description: "Manage recovery processes to reclaim funds from defaulting borrowers after claims have been paid.",
+      sections: [
+        {
+          title: "Overview",
+          items: [
+            "View all recovery processes initiated by NCGC.",
+            "Track recovery status: Initiated, In Progress, Completed, or Closed.",
+            "Monitor recovery methods and assigned personnel."
+          ]
+        },
+        {
+          title: "Actions",
+          items: [
+            "Click 'Create Recovery Process' to start a new recovery.",
+            "Select an application with an approved and paid claim.",
+            "Choose recovery method, assign personnel, and set priority."
+          ]
+        }
+      ]
+    },
+    "/ncgc_analyst/recovery/create": {
+      title: "Create Recovery Process",
+      description: "Initiate a new recovery process for a defaulted loan where a claim has been paid.",
+      sections: [
+        {
+          title: "Process",
+          items: [
+            "Select an application from the dropdown (only shows applications with approved and paid claims).",
+            "Choose a recovery method (Legal Action, Asset Seizure, Negotiation, etc.).",
+            "Set the recovery amount (auto-filled from claim payment amount).",
+            "Assign recovery personnel and set priority level.",
+            "Add notes and observations."
+          ]
+        },
+        {
+          title: "Important",
+          items: [
+            "Recovery can only be initiated for applications with approved and paid claims.",
+            "Applications with existing recovery processes won't appear in the dropdown.",
+            "You can also start recovery directly from the claim details page."
+          ]
+        }
+      ]
+    },
+    "/ncgc_analyst/recovery/[id]": {
+      title: "Recovery Process Details",
+      description: "View and update the status of a specific recovery process.",
+      sections: [
+        {
+          title: "Information",
+          items: [
+            "View recovery method, amount, assignee, and priority.",
+            "Track recovery status and milestones.",
+            "View notes and observations."
+          ]
+        },
+        {
+          title: "Status Updates",
+          items: [
+            "Update recovery status as the process progresses.",
+            "Add comments for each status change.",
+            "View the complete history of status changes and milestones."
           ]
         }
       ]
@@ -177,22 +354,82 @@ export default function DocumentationWidget() {
       return;
     }
 
-    // Partial match for dynamic routes (e.g., /ncgc_analyst/dashboard/applications/123)
+    // Partial match for dynamic routes
     if (pathname.includes("/ncgc_analyst/dashboard/applications/")) {
       setContent(docs["/ncgc_analyst/dashboard/applications"]);
       return;
     }
     
+    if (pathname.includes("/ncgc_analyst/claims/") && pathname !== "/ncgc_analyst/claims") {
+      setContent(docs["/ncgc_analyst/claims/[id]"]);
+      return;
+    }
+    
+    if (pathname.includes("/ncgc_analyst/recovery/create")) {
+      setContent(docs["/ncgc_analyst/recovery/create"]);
+      return;
+    }
+    
+    if (pathname.includes("/ncgc_analyst/recovery/") && pathname !== "/ncgc_analyst/recovery") {
+      setContent(docs["/ncgc_analyst/recovery/[id]"]);
+      return;
+    }
+    
     if (pathname.includes("/bank_maker/dashboard/") && pathname !== "/bank_maker/dashboard/create") {
-       // Re-use create or dashboard content? Or generic detail?
-       // Let's make a generic detail for bank maker view
+       if (pathname.includes("/claim")) {
+         setContent({
+           title: "Create Claim",
+           description: "Submit a claim request for a defaulted loan. Claims can be created when a loan exceeds 180 days past due.",
+           sections: [
+             {
+               title: "Claim Information",
+               items: [
+                 "Fill in the claim amount (cannot exceed the guaranteed portion).",
+                 "Provide the default date and reason for default.",
+                 "Document outstanding amounts and actions taken.",
+                 "Upload supporting documents if available."
+               ]
+             },
+             {
+               title: "Important",
+               items: [
+                 "Claims can only be submitted for approved applications.",
+                 "The claim amount is automatically calculated based on the guarantee percentage.",
+                 "Once submitted, NCGC analysts will review your claim."
+               ]
+             }
+           ]
+         });
+         return;
+       }
+       // Generic application detail view
        setContent({
          title: "Application Details",
-         description: "View the details of your submitted application.",
+         description: "View the details of your submitted loan guarantee application, including repayment tracking and claim management.",
          sections: [
            {
-             title: "Info",
-             items: ["Check the current status of your application.", "Review the information you submitted."]
+             title: "Overview",
+             items: [
+               "View the current status of your application.",
+               "Review all submitted information and documents.",
+               "Check repayment schedule and performance (for approved applications)."
+             ]
+           },
+           {
+             title: "Repayment Tracking",
+             items: [
+               "Use the 'Days Past Due' slider to simulate loan performance.",
+               "View the repayment schedule and track payment status.",
+               "Monitor when the loan exceeds 180 days past due (default threshold)."
+             ]
+           },
+           {
+             title: "Claims",
+             items: [
+               "When DPD exceeds 180 days, a 'Create Claim' button will appear.",
+               "Click to submit a claim for the guaranteed portion of the defaulted loan.",
+               "View claim status and details if a claim has already been submitted."
+             ]
            }
          ]
        });
@@ -286,10 +523,19 @@ export default function DocumentationWidget() {
             </div>
 
             {/* Footer */}
-            <div className="p-4 border-t border-gray-100 bg-gray-50 sm:rounded-b-2xl text-center">
-              <p className="text-xs text-gray-400">
-                NCGC Interactive Documentation
-              </p>
+            <div className="p-4 border-t border-gray-100 bg-gray-50 sm:rounded-b-2xl">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-xs text-gray-400">
+                  NCGC Interactive Documentation
+                </p>
+                <Link
+                  href="/documentation"
+                  className="text-xs text-emerald-600 hover:text-emerald-700 font-medium flex items-center gap-1"
+                >
+                  Full Documentation
+                  <ExternalLink size={12} />
+                </Link>
+              </div>
             </div>
           </div>
         </div>

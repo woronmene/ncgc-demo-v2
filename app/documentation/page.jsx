@@ -13,6 +13,8 @@ import {
   Building2,
   TrendingUp,
   AlertTriangle,
+  FileWarning,
+  RefreshCw,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -223,7 +225,17 @@ export default function DocumentationPage() {
             </li>
             <li>
               <a href="#payment" className="text-emerald-600 hover:underline">
-                8. Payment Delay Simulation
+                8. Loan Monitoring & DPD Simulation
+              </a>
+            </li>
+            <li>
+              <a href="#claims" className="text-emerald-600 hover:underline">
+                9. Claims Management
+              </a>
+            </li>
+            <li>
+              <a href="#recovery" className="text-emerald-600 hover:underline">
+                10. Recovery Process
               </a>
             </li>
           </ul>
@@ -253,10 +265,20 @@ export default function DocumentationPage() {
             </p>
             <p>
               The system showcases the complete lifecycle of a credit guarantee
-              application, from initial submission by a bank officer, through
-              KYC verification, risk assessment, approval/rejection, and ongoing
-              loan monitoring with payment delay simulation.
+              application, from PFI self-onboarding, through initial submission
+              by a bank officer, KYC verification, risk assessment,
+              approval/rejection, and ongoing loan monitoring with payment delay
+              simulation.
             </p>
+            <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 mt-4">
+              <p className="text-sm text-emerald-800">
+                <strong>Note on PFI Onboarding:</strong> In this demo, PFIs
+                onboard themselves through the PFI Console Portal. Once all
+                required fields are correctly provided, the onboarding is
+                automatically approved - no manual NCGC admin approval is
+                required.
+              </p>
+            </div>
           </div>
         </section>
 
@@ -316,9 +338,9 @@ export default function DocumentationPage() {
                 NCGC Admin
               </h3>
               <p className="text-sm text-gray-700">
-                Manages system settings and onboards new Partner Financial
-                Institutions (PFIs). Responsible for verifying bank credentials
-                and compliance requirements.
+                Manages system settings and views onboarded Partner Financial
+                Institutions (PFIs). Note: PFIs now onboard themselves through
+                the PFI Console Portal.
               </p>
             </div>
             <div className="border border-gray-200 rounded-lg p-6 bg-blue-50">
@@ -358,24 +380,32 @@ export default function DocumentationPage() {
           <div className="space-y-6">
             <div className="border-l-4 border-emerald-500 pl-6 py-2">
               <h3 className="font-semibold text-gray-800 mb-2">
-                Step 1: Login as NCGC Admin
+                Step 1: PFI Self-Onboarding
               </h3>
               <p className="text-gray-700 text-sm">
                 Use the "View Demo Credentials" button on the login page to see
-                available credentials. Login as an NCGC Admin to begin the
-                onboarding process.
+                available credentials. Login with the generic PFI onboarding
+                credentials (pfi.onboard@ncgc.gov.ng / pfi123) to access the PFI
+                Console Portal. Fill in your institution's details, including
+                CBN License, RC Number, NDIC Number, and compliance information.
+                The system will automatically verify these credentials.{" "}
+                <strong>
+                  Your onboarding will be automatically approved once all
+                  required fields are correctly provided
+                </strong>{" "}
+                - no manual NCGC admin approval is needed in this demo.
               </p>
             </div>
 
             <div className="border-l-4 border-blue-500 pl-6 py-2">
               <h3 className="font-semibold text-gray-800 mb-2">
-                Step 2: Onboard a Bank
+                Step 2: Receive Your Credentials
               </h3>
               <p className="text-gray-700 text-sm">
-                Navigate to the Admin Dashboard and click "Onboard New Bank".
-                Fill in the bank's details, including CBN License, RC Number,
-                NDIC Number, and compliance information. The system will
-                automatically verify these credentials.
+                After successful onboarding, you will receive login credentials
+                for your institution (Bank Maker and Bank Approver roles). These
+                credentials are automatically generated and displayed upon
+                completion. You can copy them for future use.
               </p>
             </div>
 
@@ -384,9 +414,9 @@ export default function DocumentationPage() {
                 Step 3: Login as Bank Maker
               </h3>
               <p className="text-gray-700 text-sm">
-                Logout and login as a Bank Maker (use credentials for the bank
-                you just onboarded). You'll see the Bank Maker dashboard with
-                options to create new applications.
+                Logout and login as a Bank Maker using the credentials you
+                received during onboarding. You'll see the Bank Maker dashboard
+                with options to create new applications.
               </p>
             </div>
 
@@ -409,11 +439,12 @@ export default function DocumentationPage() {
                 </li>
                 <li>
                   <strong>Required Documents:</strong> Upload Certificate of
-                  Incorporation, Tax Clearance, and Performance Bond
+                  Incorporation, Tax Clearance, Performance Bond (if
+                  applicable), and Collateral Documents (if applicable)
                 </li>
                 <li>
-                  <strong>Request Details:</strong> Specify loan amount, tenure,
-                  purpose, and guarantee type
+                  <strong>Loan Guarantee Request Details:</strong> Specify loan
+                  amount, tenure, purpose, and guarantee type
                 </li>
               </ul>
               <p className="text-gray-700 text-sm mt-2">
@@ -425,7 +456,7 @@ export default function DocumentationPage() {
 
             <div className="border-l-4 border-indigo-500 pl-6 py-2">
               <h3 className="font-semibold text-gray-800 mb-2">
-                Step 5: Login as NCGC Analyst
+                Step 4: Login as NCGC Analyst
               </h3>
               <p className="text-gray-700 text-sm">
                 Logout and login as an NCGC Analyst. Navigate to the
@@ -436,7 +467,7 @@ export default function DocumentationPage() {
 
             <div className="border-l-4 border-emerald-600 pl-6 py-2">
               <h3 className="font-semibold text-gray-800 mb-2">
-                Step 6: Analyze and Decide
+                Step 5: Analyze and Decide
               </h3>
               <p className="text-gray-700 text-sm">
                 On the application detail page, use the Risk Assessment tools
@@ -461,7 +492,7 @@ export default function DocumentationPage() {
 
             <div className="border-l-4 border-red-500 pl-6 py-2">
               <h3 className="font-semibold text-gray-800 mb-2">
-                Step 7: Monitor Loan Performance
+                Step 6: Monitor Loan Performance
               </h3>
               <p className="text-gray-700 text-sm">
                 After approving an application, navigate to the "Loans" section
@@ -585,8 +616,10 @@ export default function DocumentationPage() {
                   BVN, NIN, and uploaded identification documents
                 </li>
                 <li>
-                  <strong>Uploaded Documents:</strong> All submitted documents
-                  with preview and download capabilities
+                  <strong>Uploaded Documents:</strong> All submitted documents including Certificate of Incorporation, Tax Clearance, Performance Bond (if applicable), and Collateral Documents (if applicable) with preview and download capabilities
+                </li>
+                <li>
+                  <strong>Claim Information:</strong> If a claim has been submitted for this application, view claim details and status
                 </li>
                 <li>
                   <strong>Messages/Comments:</strong> Communication history
@@ -597,7 +630,7 @@ export default function DocumentationPage() {
 
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
               <h3 className="font-semibold text-gray-800 mb-3">
-                Risk Assessment & Guarantee Simulation
+                Risk Scorecard
               </h3>
               <p className="text-gray-700 text-sm mb-4">
                 The most important feature on the analyst view is the{" "}
@@ -606,37 +639,49 @@ export default function DocumentationPage() {
 
               <div className="bg-white rounded-lg p-4 mb-4 border border-gray-200">
                 <h4 className="font-medium text-gray-800 mb-2">
-                  Risk Score Slider (0-100)
+                  Risk Score Calculation
                 </h4>
                 <p className="text-sm text-gray-600 mb-3">
-                  Analysts can adjust the risk score using an interactive
-                  slider. The system automatically calculates the suggested
-                  guarantee percentage based on the risk level:
+                  The risk assessment tool calculates a comprehensive risk score based on multiple factors. The system automatically computes the total score and suggests guarantee coverage:
                 </p>
-                <ul className="list-disc pl-6 space-y-1 text-sm text-gray-600">
+                <ul className="list-disc pl-6 space-y-2 text-sm text-gray-600">
                   <li>
-                    <strong>80-100 (Low Risk):</strong> 50% guarantee coverage
+                    <strong>Credit Score (Simulated):</strong> Based on credit history, ranges from 60-80 points. This is simulated since we don't have access to actual credit bureaus.
                   </li>
                   <li>
-                    <strong>50-79 (Moderate Risk):</strong> 55% guarantee
-                    coverage
+                    <strong>Performance Bond:</strong> +10 points if Performance Bond documents were uploaded as part of the application.
                   </li>
                   <li>
-                    <strong>0-49 (High Risk):</strong> 60% guarantee coverage
+                    <strong>Collateral Documents:</strong> +10 points if Collateral Documents were uploaded (optional field).
+                  </li>
+                  <li>
+                    <strong>Business Focus / Thematic Area:</strong> Points vary based on sector priority:
+                    <ul className="list-disc pl-6 mt-1 space-y-1">
+                      <li>Youth-led / Women-led / Green Energy programs: 20 points</li>
+                      <li>Agriculture: 15 points</li>
+                      <li>Other priority sectors: 10 points</li>
+                      <li>Standard sectors: 5 points</li>
+                      <li>High-risk sectors: 0 points</li>
+                    </ul>
                   </li>
                 </ul>
-              </div>
-
-              <div className="bg-white rounded-lg p-4 mb-4 border border-gray-200">
-                <h4 className="font-medium text-gray-800 mb-2">
-                  Priority Sector Toggle
-                </h4>
-                <p className="text-sm text-gray-600">
-                  When enabled for Agriculture, Youth/Women-led, or Green Energy
-                  businesses, the system automatically sets the guarantee to 60%
-                  regardless of risk score, recognizing the importance of
-                  supporting these sectors.
+                <p className="text-sm text-gray-600 mt-3 font-medium">
+                  Total Risk Score determines the suggested guarantee coverage:
                 </p>
+                <ul className="list-disc pl-6 space-y-1 text-sm text-gray-600 mt-2">
+                  <li>
+                    <strong>80-100 (Low Risk):</strong> 50-55% guarantee coverage
+                  </li>
+                  <li>
+                    <strong>50-79 (Moderate Risk):</strong> 55-60% guarantee coverage
+                  </li>
+                  <li>
+                    <strong>0-49 (High Risk):</strong> 60% guarantee coverage (maximum)
+                  </li>
+                  <li>
+                    <strong>Special High-Risk (Priority Sectors):</strong> Agriculture, Youth-led, Women-led, Green Energy - 60% guarantee coverage regardless of other factors
+                  </li>
+                </ul>
               </div>
 
               <div className="bg-white rounded-lg p-4 border border-gray-200">
@@ -796,7 +841,7 @@ export default function DocumentationPage() {
               <p className="text-gray-700 text-sm mb-4">
                 After approving an application, navigate to the "Loans" section
                 from the NCGC Analyst dashboard. Click on any approved loan to
-                access the detailed monitoring page.
+                access the detailed monitoring page. PFIs can also view repayment tracking from their application detail pages.
               </p>
             </div>
 
@@ -930,7 +975,170 @@ export default function DocumentationPage() {
                 different values (30, 60, 90, 120, 180 days) to see how the loan
                 grading transitions through each category. This demonstrates how
                 payment delays trigger different risk classifications and
-                potential claim initiation requirements.
+                potential claim initiation requirements. The DPD value is saved to the database and persists across sessions.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 9: Claims Management */}
+        <section
+          id="claims"
+          className="bg-white rounded-xl shadow-lg p-8 mb-8 border border-gray-100"
+        >
+          <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+            <FileWarning className="mr-3 text-emerald-600" size={28} />
+            9. Claims Management
+          </h2>
+          <div className="space-y-6">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+              <h3 className="font-semibold text-gray-800 mb-3">
+                Overview
+              </h3>
+              <p className="text-gray-700 text-sm mb-4">
+                When a loan exceeds 180 days past due (DPD), it enters default status. At this point, 
+                Partner Financial Institutions (PFIs) can initiate a claim to recover the guaranteed 
+                portion of the defaulted loan from NCGC.
+              </p>
+            </div>
+
+            <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-6">
+              <h3 className="font-semibold text-gray-800 mb-3">
+                PFI: Creating a Claim
+              </h3>
+              <p className="text-gray-700 text-sm mb-4">
+                From the Bank Maker's application detail page (for approved applications):
+              </p>
+              <ol className="list-decimal pl-6 space-y-2 text-sm text-gray-700">
+                <li>Use the "Days Past Due" slider to simulate loan performance (or wait until DPD exceeds 180 days)</li>
+                <li>When DPD exceeds 180 days, a "Create Claim" button will appear</li>
+                <li>Click "Create Claim" to navigate to the claim submission form</li>
+                <li>Fill in the claim details:
+                  <ul className="list-disc pl-6 mt-2 space-y-1">
+                    <li>Claim amount (automatically calculated based on guarantee percentage, cannot exceed maximum claimable)</li>
+                    <li>Default date</li>
+                    <li>Outstanding principal and interest amounts</li>
+                    <li>Default reason (required)</li>
+                    <li>Actions taken before default</li>
+                    <li>Supporting documents (optional)</li>
+                  </ul>
+                </li>
+                <li>Submit the claim for NCGC review</li>
+              </ol>
+            </div>
+
+            <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
+              <h3 className="font-semibold text-gray-800 mb-3">
+                NCGC Analyst: Reviewing Claims
+              </h3>
+              <p className="text-gray-700 text-sm mb-4">
+                NCGC Analysts can view and manage claims in two ways:
+              </p>
+              <ul className="list-disc pl-6 space-y-2 text-sm text-gray-700">
+                <li><strong>Claims Menu:</strong> Navigate to "Claims" from the side menu to see all claims across all PFIs</li>
+                <li><strong>From Application Details:</strong> View claim information directly from ongoing application detail pages</li>
+                <li><strong>From Loan Monitoring:</strong> Access claims from the loan details page when monitoring ongoing loans</li>
+              </ul>
+              <p className="text-gray-700 text-sm mt-4 mb-3">
+                When reviewing a claim:
+              </p>
+              <ol className="list-decimal pl-6 space-y-2 text-sm text-gray-700">
+                <li>Review all claim information including default date, reason, and outstanding amounts</li>
+                <li>Check supporting documents uploaded by the PFI</li>
+                <li>Verify the claim amount against the guaranteed portion</li>
+                <li>Make a decision:
+                  <ul className="list-disc pl-6 mt-2 space-y-1">
+                    <li><strong>Approve:</strong> Click "Approve Claim" - a confirmation dialog will show the exact payment amount. Click "Approve Claim and Pay" to simulate payment processing. The PFI will receive a notification.</li>
+                    <li><strong>Reject:</strong> Click "Reject Claim" and provide review comments explaining the rejection reason (required)</li>
+                  </ul>
+                </li>
+              </ol>
+            </div>
+
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+              <p className="text-sm text-amber-800">
+                <strong>💡 Important:</strong> Claims can only be submitted for approved applications. 
+                The claim amount cannot exceed the maximum claimable amount based on the guarantee percentage. 
+                Once a claim is approved and paid, NCGC can initiate a recovery process to attempt to recover funds from the defaulting borrower.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 10: Recovery Process */}
+        <section
+          id="recovery"
+          className="bg-white rounded-xl shadow-lg p-8 mb-8 border border-gray-100"
+        >
+          <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+            <RefreshCw className="mr-3 text-emerald-600" size={28} />
+            10. Recovery Process
+          </h2>
+          <div className="space-y-6">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+              <h3 className="font-semibold text-gray-800 mb-3">
+                Overview
+              </h3>
+              <p className="text-gray-700 text-sm mb-4">
+                After NCGC approves and pays a claim to a PFI, NCGC initiates a recovery process to 
+                attempt to recover the funds from the defaulting borrower. This process is managed 
+                entirely by NCGC analysts.
+              </p>
+            </div>
+
+            <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-6">
+              <h3 className="font-semibold text-gray-800 mb-3">
+                Creating a Recovery Process
+              </h3>
+              <p className="text-gray-700 text-sm mb-4">
+                Recovery processes can be initiated in two ways:
+              </p>
+              <ol className="list-decimal pl-6 space-y-2 text-sm text-gray-700">
+                <li><strong>From Claims Page:</strong> After approving and paying a claim, click "Start Recovery Process" from the claim details page</li>
+                <li><strong>From Recovery Menu:</strong> Navigate to "Recovery" from the side menu, then click "Create Recovery Process"</li>
+              </ol>
+              <p className="text-gray-700 text-sm mt-4 mb-3">
+                When creating a recovery process:
+              </p>
+              <ul className="list-disc pl-6 space-y-2 text-sm text-gray-700">
+                <li>Select an application from the dropdown (only shows applications with approved and paid claims, no existing recovery)</li>
+                <li>Choose a recovery method (Legal Action, Asset Seizure, Negotiation, etc.)</li>
+                <li>Set the recovery amount (auto-filled from claim payment amount, can be adjusted)</li>
+                <li>Assign recovery personnel</li>
+                <li>Set priority level (High, Medium, Low)</li>
+                <li>Add notes and observations</li>
+              </ul>
+            </div>
+
+            <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
+              <h3 className="font-semibold text-gray-800 mb-3">
+                Managing Recovery Processes
+              </h3>
+              <p className="text-gray-700 text-sm mb-4">
+                View all recovery processes from the "Recovery" menu. Each recovery process shows:
+              </p>
+              <ul className="list-disc pl-6 space-y-2 text-sm text-gray-700">
+                <li>Business name and application details</li>
+                <li>Recovery method and amount</li>
+                <li>Assigned personnel</li>
+                <li>Current status (Initiated, In Progress, Completed, Closed)</li>
+                <li>Creation date</li>
+              </ul>
+              <p className="text-gray-700 text-sm mt-4 mb-3">
+                From the recovery detail page, analysts can:
+              </p>
+              <ul className="list-disc pl-6 space-y-2 text-sm text-gray-700">
+                <li>View complete recovery information</li>
+                <li>Update recovery status with comments</li>
+                <li>Track milestones and status change history</li>
+                <li>Link back to the original application</li>
+              </ul>
+            </div>
+
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+              <p className="text-sm text-amber-800">
+                <strong>💡 Note:</strong> Recovery processes are only available for applications with 
+                approved and paid claims. Each application can only have one active recovery process at a time.
               </p>
             </div>
           </div>

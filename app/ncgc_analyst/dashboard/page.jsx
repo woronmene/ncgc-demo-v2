@@ -60,12 +60,6 @@ export default function AnalystDashboard() {
         <h1 className="text-2xl font-semibold text-gray-800">
           All Applications
         </h1>
-        <Link
-          href="/bank_maker/dashboard/create"
-          className="flex items-center bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700"
-        >
-          <Plus size={18} className="mr-2" /> Create Application
-        </Link>
       </div>
 
       <div className="bg-white shadow rounded-lg overflow-hidden">
@@ -86,17 +80,24 @@ export default function AnalystDashboard() {
               <tr>
                 <td colSpan={6} className="p-12 text-center">
                   <div className="flex flex-col items-center justify-center text-gray-500">
-                    <Loader2 className="animate-spin mb-2 text-emerald-600" size={32} />
+                    <Loader2
+                      className="animate-spin mb-2 text-emerald-600"
+                      size={32}
+                    />
                     <p>Loading applications...</p>
                   </div>
                 </td>
               </tr>
             ) : applications.length > 0 ? (
               applications.map((app) => (
-                <tr 
-                  key={app.id} 
+                <tr
+                  key={app.id}
                   className="hover:bg-gray-50 transition cursor-pointer"
-                  onClick={() => router.push(`/ncgc_analyst/dashboard/applications/${app.id}`)}
+                  onClick={() =>
+                    router.push(
+                      `/ncgc_analyst/dashboard/applications/${app.id}`
+                    )
+                  }
                 >
                   <td className="p-4 font-medium text-gray-800">
                     {app.businessName}
