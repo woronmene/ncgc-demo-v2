@@ -33,7 +33,7 @@ function generateCredentials(bankName, domain = "bank.com") {
   const baseEmail = `${cleanName}@${domain}`;
   return [
     {
-      label: "Bank Maker",
+      label: "PFI Maker",
       email: `maker.${baseEmail}`,
       password: "bankmaker123",
       role: "bank_maker",

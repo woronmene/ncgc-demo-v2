@@ -42,7 +42,7 @@ export default function DocumentationWidget() {
             "PFI Onboarding: Use generic credentials to onboard your financial institution as a PFI.",
             "NCGC Admin: Manages system settings and views onboarded PFIs.",
             "NCGC Analyst: Reviews, approves, and monitors guarantee applications.",
-            "Bank Maker: Represents a PFI. Creates and submits loan guarantee applications."
+            "PFI Maker: Represents a PFI. Creates and submits loan guarantee applications."
           ]
         },
         {
@@ -92,7 +92,7 @@ export default function DocumentationWidget() {
       ]
     },
     "/bank_maker/dashboard": {
-      title: "Bank Maker Dashboard",
+      title: "PFI Maker Dashboard",
       description: "Manage your institution's guarantee applications.",
       sections: [
         {

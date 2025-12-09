@@ -18,10 +18,10 @@ export default function BankMakerDashboardPage() {
       const bankMatch = cookies.match(/userBank=([^;]+)/);
       if (bankMatch) {
         const bank = decodeURIComponent(bankMatch[1]);
-        console.log("Bank Maker Dashboard: Found userBank cookie:", bank);
+        console.log("PFI Maker Dashboard: Found userBank cookie:", bank);
         setUserBank(bank);
       } else {
-        console.log("Bank Maker Dashboard: No userBank cookie found");
+        console.log("PFI Maker Dashboard: No userBank cookie found");
         setLoading(false); // Stop loading if no bank found (will show empty state)
       }
     }

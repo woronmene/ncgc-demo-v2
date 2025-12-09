@@ -15,7 +15,7 @@ export async function GET() {
         } else if (userData.role === "pfi_onboard") {
           userData.label = "PFI Onboarding";
         } else if (userData.role === "bank_maker") {
-          userData.label = `Bank Maker - ${userData.bank || "Bank"}`;
+          userData.label = `PFI Maker - ${userData.bank || "PFI"}`;
         } else if (userData.role === "bank_approver") {
           userData.label = `Bank Approver - ${userData.bank || "Bank"}`;
         } else {
