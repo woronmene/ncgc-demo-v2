@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2, ChevronLeft, RefreshCw, AlertCircle, CheckCircle, XCircle } from "lucide-react";
 
-export default function CreateRecoveryPage() {
+function CreateRecoveryForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [applications, setApplications] = useState([]);
@@ -359,6 +359,18 @@ export default function CreateRecoveryPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function CreateRecoveryPage() {
+  return (
+    <Suspense fallback={
+      <div className="p-10 flex justify-center">
+        <Loader2 className="animate-spin text-gray-400" size={32} />
+      </div>
+    }>
+      <CreateRecoveryForm />
+    </Suspense>
   );
 }
 
