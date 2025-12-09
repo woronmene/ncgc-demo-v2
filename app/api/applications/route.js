@@ -12,7 +12,7 @@ export async function GET() {
     const appsRef = collection(db, "applications");
     const snapshot = await getDocs(appsRef);
     
-    const apps = snapshot.docs.map(doc => doc.data());
+    const apps = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
 
     // Return all or a lightweight list
     const list = apps.map((a) => ({
@@ -24,6 +24,8 @@ export async function GET() {
       ncgc: a.ncgc,
       tenure: a.tenure,
       createdBy: a.createdBy,
+      claim: a.claim || null, // Include claim data for recovery filtering
+      recovery: a.recovery || null, // Include recovery data for filtering
     }));
 
     return NextResponse.json(list);

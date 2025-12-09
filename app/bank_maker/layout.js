@@ -49,19 +49,15 @@ export default function BankMakerLayout({ children }) {
           <div className="p-6 flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="h-12 w-12 flex items-center justify-center flex-shrink-0">
-                <img 
-                  src="/ncgc-logo.png" 
-                  alt="NCGC Logo" 
+                <img
+                  src="/ncgc-logo.png"
+                  alt="NCGC Logo"
                   className="h-12 w-12 object-contain"
                 />
               </div>
               <div>
-                <h2 className="text-lg font-semibold text-gray-800">
-                  Bank Maker
-                </h2>
-                <p className="text-xs text-gray-500 mt-0.5">
-                  Partner bank console
-                </p>
+                <h2 className="text-lg font-semibold text-gray-800">PFI</h2>
+                <p className="text-xs text-gray-500 mt-0.5">PFI Console</p>
               </div>
             </div>
             <button

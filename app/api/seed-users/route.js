@@ -4,13 +4,6 @@ import { collection, getDocs, query, where, addDoc } from "firebase/firestore";
 
 const users = [
   {
-    "id": 1,
-    "email": "admin@ncgc.gov.ng",
-    "password": "admin123",
-    "role": "ncgc_admin",
-    "name": "NCGC Admin"
-  },
-  {
     "id": 2,
     "email": "analyst@ncgc.gov.ng",
     "password": "analyst123",
@@ -18,30 +11,10 @@ const users = [
     "name": "NCGC Analyst"
   },
   {
-    "id": 3,
-    "email": "approver@ncgc.gov.ng",
-    "password": "approver123",
-    "role": "ncgc_approver",
-    "name": "NCGC Approver"
-  },
-  {
-    "id": 4,
-    "email": "support@ncgc.gov.ng",
-    "password": "support123",
-    "role": "ncgc_support",
-    "name": "NCGC Support"
-  },
-  {
-    "email": "maker.firstbankplc@bank.com",
-    "password": "bankmaker123",
-    "role": "bank_maker",
-    "bank": "First bank plc"
-  },
-  {
-    "email": "approver.firstbankplc@bank.com",
-    "password": "bankapprover123",
-    "role": "bank_approver",
-    "bank": "First bank plc"
+    "email": "pfi.onboard@ncgc.gov.ng",
+    "password": "pfi123",
+    "role": "pfi_onboard",
+    "name": "PFI Onboarding"
   }
 ];
 

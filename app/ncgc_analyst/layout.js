@@ -3,7 +3,14 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FileText, LogOut, Menu, X } from "lucide-react";
+import {
+  FileText,
+  LogOut,
+  Menu,
+  X,
+  FileWarning,
+  RefreshCw,
+} from "lucide-react";
 
 export default function AnalystLayout({ children }) {
   const pathname = usePathname() || "";
@@ -19,6 +26,16 @@ export default function AnalystLayout({ children }) {
       name: "Ongoing Loans",
       href: "/ncgc_analyst/loans",
       icon: <FileText size={18} />,
+    },
+    {
+      name: "Claims",
+      href: "/ncgc_analyst/claims",
+      icon: <FileWarning size={18} />,
+    },
+    {
+      name: "Recovery",
+      href: "/ncgc_analyst/recovery",
+      icon: <RefreshCw size={18} />,
     },
   ];
 
@@ -46,9 +63,9 @@ export default function AnalystLayout({ children }) {
           <div className="p-6 flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="h-12 w-12 flex items-center justify-center flex-shrink-0">
-                <img 
-                  src="/ncgc-logo.png" 
-                  alt="NCGC Logo" 
+                <img
+                  src="/ncgc-logo.png"
+                  alt="NCGC Logo"
                   className="h-12 w-12 object-contain"
                 />
               </div>

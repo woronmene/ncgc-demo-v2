@@ -3,7 +3,20 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { CheckCircle, XCircle, FileText, Download, User, Eye, X, AlertTriangle, ShieldCheck, ChevronLeft } from "lucide-react";
+import {
+  CheckCircle,
+  XCircle,
+  FileText,
+  Download,
+  User,
+  Eye,
+  X,
+  AlertTriangle,
+  ShieldCheck,
+  ChevronLeft,
+  FileWarning,
+  Clock,
+} from "lucide-react";
 
 export default function ApplicationDetailsPage() {
   const router = useRouter();
@@ -13,12 +26,13 @@ export default function ApplicationDetailsPage() {
   const [application, setApplication] = useState(null);
   const [loading, setLoading] = useState(true);
   const [comments, setComments] = useState([]);
+  const [claim, setClaim] = useState(null);
   const [guarantee, setGuarantee] = useState("");
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
   const [busy, setBusy] = useState(false);
-  
+
   // Document Preview State
   const [previewDoc, setPreviewDoc] = useState(null);
 
@@ -28,7 +42,66 @@ export default function ApplicationDetailsPage() {
   const [riskCategory, setRiskCategory] = useState("");
   const [suggestedCoverage, setSuggestedCoverage] = useState(0);
 
+  // Risk Score Breakdown
+  const [creditScore, setCreditScore] = useState(70); // Simulated credit score (60-80)
+  const [performanceBondPoints, setPerformanceBondPoints] = useState(0);
+  const [collateralPoints, setCollateralPoints] = useState(0);
+  const [businessFocusPoints, setBusinessFocusPoints] = useState(0);
+
   const mountedRef = useRef(true);
+
+  // Helper function to calculate business focus points
+  function calculateBusinessFocusPoints(thematicArea) {
+    if (!thematicArea) return 0;
+
+    const area = thematicArea.toLowerCase();
+
+    // Priority sectors (highest points: 20)
+    if (
+      area.includes("agriculture") ||
+      area.includes("agribusiness") ||
+      area.includes("women") ||
+      area.includes("youth") ||
+      area.includes("green") ||
+      area.includes("sustainable")
+    ) {
+      return 20;
+    }
+
+    // High priority sectors (15 points)
+    if (
+      area.includes("innovation") ||
+      area.includes("technology") ||
+      area.includes("manufacturing") ||
+      area.includes("health") ||
+      area.includes("education")
+    ) {
+      return 15;
+    }
+
+    // Medium priority sectors (10 points)
+    if (
+      area.includes("construction") ||
+      area.includes("infrastructure") ||
+      area.includes("transport") ||
+      area.includes("logistics") ||
+      area.includes("financial")
+    ) {
+      return 10;
+    }
+
+    // Lower priority sectors (5 points)
+    if (
+      area.includes("trade") ||
+      area.includes("tourism") ||
+      area.includes("business services") ||
+      area.includes("mining")
+    ) {
+      return 5;
+    }
+
+    return 0;
+  }
 
   useEffect(() => {
     mountedRef.current = true;
@@ -44,12 +117,60 @@ export default function ApplicationDetailsPage() {
           if (data.application.ncgc?.guaranteePercentage) {
             setGuarantee(String(data.application.ncgc.guaranteePercentage));
           }
-          
-          // Check if sector matches priority sectors to auto-toggle
-          const prioritySectors = ["Agriculture", "Green Energy", "Youth-Led", "Women-Led"];
-          if (prioritySectors.some(s => data.application.sector?.includes(s) || data.application.thematicArea?.includes(s))) {
-            setIsPrioritySector(true);
+
+          // Load claim if exists
+          if (data.application.claim?.id) {
+            try {
+              const claimRes = await fetch(
+                `/api/claims/${data.application.claim.id}`
+              );
+              const claimData = await claimRes.json();
+              if (claimData.ok) {
+                setClaim(claimData.claim);
+              }
+            } catch (err) {
+              console.error("Error loading claim:", err);
+            }
           }
+
+          // Check if sector matches priority sectors to auto-toggle
+          const prioritySectors = [
+            "Agriculture",
+            "Green Energy",
+            "Youth-Led",
+            "Women-Led",
+          ];
+          const thematicArea = data.application.thematicArea || "";
+          const isPriority = prioritySectors.some(
+            (s) =>
+              data.application.sector?.includes(s) ||
+              thematicArea.includes(s) ||
+              thematicArea.includes("Women") ||
+              thematicArea.includes("Youth") ||
+              thematicArea.includes("Agriculture") ||
+              thematicArea.includes("Green")
+          );
+
+          if (isPriority) {
+            setIsPrioritySector(true);
+            setBusinessFocusPoints(20); // Highest points for priority sectors
+          } else {
+            // Calculate business focus points based on thematic area
+            const focusPoints = calculateBusinessFocusPoints(thematicArea);
+            setBusinessFocusPoints(focusPoints);
+          }
+
+          // Check for performance bond and collateral
+          if (data.application.documents?.performanceBond) {
+            setPerformanceBondPoints(10);
+          }
+          if (data.application.documents?.collateral) {
+            setCollateralPoints(10);
+          }
+
+          // Simulate credit score (60-80 range)
+          const simulatedCredit = Math.floor(Math.random() * 21) + 60; // 60-80
+          setCreditScore(simulatedCredit);
         }
       } catch (err) {
         console.error("Fetch app error", err);
@@ -64,7 +185,24 @@ export default function ApplicationDetailsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appId]);
 
-  // Calculate Risk Category and Coverage whenever inputs change
+  // Calculate total risk score from components
+  useEffect(() => {
+    const totalScore =
+      creditScore +
+      performanceBondPoints +
+      collateralPoints +
+      businessFocusPoints;
+    // Cap at 100
+    const cappedScore = Math.min(100, totalScore);
+    setRiskScore(cappedScore);
+  }, [
+    creditScore,
+    performanceBondPoints,
+    collateralPoints,
+    businessFocusPoints,
+  ]);
+
+  // Calculate Risk Category and Coverage whenever risk score changes
   useEffect(() => {
     let category = "";
     let coverage = 0;
@@ -75,25 +213,24 @@ export default function ApplicationDetailsPage() {
     } else {
       if (riskScore >= 80) {
         category = "Low Risk";
-        // Map 80-100 to 50-55%
-        // 80 -> 55%, 100 -> 50% (Higher score = lower risk = lower coverage needed? Or strictly 50-55 range)
-        // Let's just say 50% for very high score, 55% for 80.
-        // Actually, usually better risk = lower guarantee needed.
-        coverage = 50; 
+        // Low risk: 50-55% guarantee
+        // Map 80-100 to 50-55% (higher score = lower risk = lower coverage needed)
+        coverage = Math.round(55 - ((riskScore - 80) / 20) * 5); // 80->55%, 100->50%
       } else if (riskScore >= 50) {
         category = "Moderate Risk";
-        coverage = 55;
+        // Moderate risk: 55-60% guarantee
+        // Map 50-79 to 55-60%
+        coverage = Math.round(60 - ((riskScore - 50) / 29) * 5); // 50->60%, 79->55%
       } else {
         category = "High Risk";
-        coverage = 60;
+        coverage = 60; // Max coverage for high risk
       }
     }
 
     setRiskCategory(category);
     setSuggestedCoverage(coverage);
-    
-    // Only auto-update guarantee if it hasn't been set by the backend yet (i.e. first load simulation)
-    // or if we want the simulation to drive the input. Let's make the simulation drive the input for now.
+
+    // Only auto-update guarantee if it hasn't been set by the backend yet
     if (!application?.ncgc?.guaranteePercentage) {
       setGuarantee(String(coverage));
     }
@@ -230,69 +367,196 @@ export default function ApplicationDetailsPage() {
         <div className="p-4 border-b bg-gray-50 flex justify-between items-center">
           <h3 className="font-semibold text-gray-800 flex items-center">
             <ShieldCheck className="text-emerald-600 mr-2" size={20} />
-            Risk Assessment & Guarantee Simulation
+            Risk Scorecard
           </h3>
-          <span className={`px-3 py-1 rounded-full text-xs font-bold 
-            ${riskCategory.includes("Low") ? "bg-emerald-100 text-emerald-800" : 
-              riskCategory.includes("Moderate") ? "bg-amber-100 text-amber-800" : 
-              "bg-red-100 text-red-800"}`}>
+          <span
+            className={`px-3 py-1 rounded-full text-xs font-bold 
+            ${
+              riskCategory.includes("Low")
+                ? "bg-emerald-100 text-emerald-800"
+                : riskCategory.includes("Moderate")
+                ? "bg-amber-100 text-amber-800"
+                : "bg-red-100 text-red-800"
+            }`}
+          >
             {riskCategory}
           </span>
         </div>
-        
-        <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Simulation Controls */}
-          <div className="space-y-6">
-            <div>
-              <div className="flex justify-between mb-2">
-                <label className="text-sm font-medium text-gray-700">Risk Score (0-100)</label>
-                <span className="text-sm font-bold text-emerald-600">{riskScore}</span>
-              </div>
-              <input 
-                type="range" 
-                min="0" 
-                max="100" 
-                value={riskScore} 
-                onChange={(e) => setRiskScore(Number(e.target.value))}
-                disabled={application.ncgc?.approved || application.ncgc?.rejected}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed"
-              />
-              <div className="flex justify-between text-xs text-gray-400 mt-1">
-                <span>High Risk</span>
-                <span>Moderate</span>
-                <span>Low Risk</span>
-              </div>
-            </div>
 
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100">
-              <div>
-                <p className="text-sm font-medium text-gray-800">Priority Sector?</p>
-                <p className="text-xs text-gray-500">Agriculture, Youth/Women-led, Green Energy</p>
+        <div className="p-6 space-y-6">
+          {/* Risk Score Breakdown */}
+          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <h4 className="text-sm font-semibold text-gray-800 mb-4">
+              Risk Score Calculation Breakdown
+            </h4>
+            <div className="space-y-3">
+              {/* Credit Score */}
+              <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-gray-700">
+                    Credit Score (Simulated)
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    Based on credit history (60-80 range)
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="range"
+                    min="60"
+                    max="80"
+                    value={creditScore}
+                    onChange={(e) => setCreditScore(Number(e.target.value))}
+                    disabled={
+                      application.ncgc?.approved || application.ncgc?.rejected
+                    }
+                    className="w-32 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-emerald-600 disabled:opacity-50"
+                  />
+                  <span className="text-sm font-bold text-emerald-600 w-12 text-right">
+                    {creditScore}
+                  </span>
+                </div>
               </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input 
-                  type="checkbox" 
-                  checked={isPrioritySector} 
-                  onChange={(e) => setIsPrioritySector(e.target.checked)} 
-                  disabled={application.ncgc?.approved || application.ncgc?.rejected}
-                  className="sr-only peer" 
-                />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed"></div>
-              </label>
+
+              {/* Performance Bond */}
+              <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-gray-700">
+                    Performance Bond
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {application.documents?.performanceBond
+                      ? "Document uploaded"
+                      : "No document uploaded"}
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  {application.documents?.performanceBond ? (
+                    <span className="text-sm font-bold text-emerald-600">
+                      +10 points
+                    </span>
+                  ) : (
+                    <span className="text-sm text-gray-400">+0 points</span>
+                  )}
+                </div>
+              </div>
+
+              {/* Collateral */}
+              <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-gray-700">
+                    Collateral Documents
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {application.documents?.collateral
+                      ? "Document uploaded"
+                      : "No document uploaded"}
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  {application.documents?.collateral ? (
+                    <span className="text-sm font-bold text-emerald-600">
+                      +10 points
+                    </span>
+                  ) : (
+                    <span className="text-sm text-gray-400">+0 points</span>
+                  )}
+                </div>
+              </div>
+
+              {/* Business Focus */}
+              <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-gray-700">
+                    Business Focus / Thematic Area
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {application.thematicArea || "Not specified"}
+                    {isPrioritySector && " (Priority Sector)"}
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-sm font-bold text-emerald-600">
+                    +{businessFocusPoints} points
+                  </span>
+                </div>
+              </div>
+
+              {/* Total Risk Score */}
+              <div className="flex items-center justify-between p-4 bg-emerald-50 rounded-lg border-2 border-emerald-200 mt-4">
+                <div>
+                  <p className="text-sm font-semibold text-gray-800">
+                    Total Risk Score
+                  </p>
+                  <p className="text-xs text-gray-600">
+                    Sum of all components (max 100)
+                  </p>
+                </div>
+                <span className="text-2xl font-bold text-emerald-700">
+                  {riskScore}
+                </span>
+              </div>
             </div>
           </div>
 
+          {/* Priority Sector Toggle */}
+          <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <div>
+              <p className="text-sm font-medium text-gray-800">
+                Priority Sector Override
+              </p>
+              <p className="text-xs text-gray-500">
+                Agriculture, Youth/Women-led, Green Energy (60% guarantee)
+              </p>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={isPrioritySector}
+                onChange={(e) => {
+                  setIsPrioritySector(e.target.checked);
+                  if (e.target.checked) {
+                    setBusinessFocusPoints(20);
+                  } else {
+                    setBusinessFocusPoints(
+                      calculateBusinessFocusPoints(
+                        application.thematicArea || ""
+                      )
+                    );
+                  }
+                }}
+                disabled={
+                  application.ncgc?.approved || application.ncgc?.rejected
+                }
+                className="sr-only peer"
+              />
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed"></div>
+            </label>
+          </div>
+        </div>
+
+        <div className="px-6 pb-6">
           {/* Results */}
           <div className="bg-emerald-50 rounded-xl p-6 flex flex-col justify-center items-center text-center border border-emerald-100">
-            <p className="text-sm text-emerald-800 font-medium uppercase tracking-wide mb-2">Suggested Guarantee Coverage</p>
+            <p className="text-sm text-emerald-800 font-medium uppercase tracking-wide mb-2">
+              Suggested Guarantee Coverage
+            </p>
             <div className="text-5xl font-bold text-emerald-700 mb-2">
               {suggestedCoverage}%
             </div>
-            <p className="text-xs text-emerald-600 max-w-xs">
-              Based on {isPrioritySector ? "Priority Sector status" : "calculated risk score"} and borrower profile.
+            <p className="text-xs text-emerald-600 max-w-xs mb-3">
+              Based on{" "}
+              {isPrioritySector
+                ? "Priority Sector status"
+                : "calculated risk score"}{" "}
+              and borrower profile.
             </p>
+            <div className="text-xs text-gray-600 bg-white/60 rounded px-3 py-2 mt-2 mb-4">
+              <p className="font-medium mb-1">Risk Category:</p>
+              <p className="text-emerald-700">{riskCategory}</p>
+            </div>
 
-            <div className="mt-6 w-full flex gap-3">
+            <div className="mt-4 w-full flex gap-3">
               {application.ncgc?.approved ? (
                 <div className="flex-1 px-4 py-3 bg-emerald-100 text-emerald-800 rounded-lg border border-emerald-200 font-medium flex items-center justify-center">
                   <CheckCircle size={18} className="mr-2" />
@@ -326,6 +590,95 @@ export default function ApplicationDetailsPage() {
           </div>
         </div>
       </div>
+
+      {/* Claim Information - Only show if application is approved */}
+      {application.ncgc?.approved && (
+        <div className="bg-white p-6 rounded-xl shadow border border-gray-200">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-700 flex items-center">
+              <FileWarning className="text-red-600 mr-2" size={20} />
+              Claim Information
+            </h3>
+            {claim && (
+              <button
+                onClick={() => router.push(`/ncgc_analyst/claims/${claim.id}`)}
+                className="text-sm text-emerald-700 hover:text-emerald-800 font-medium flex items-center gap-1"
+              >
+                View Full Details
+                <ChevronLeft size={16} className="rotate-180" />
+              </button>
+            )}
+          </div>
+
+          {claim ? (
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                  <p className="text-xs text-gray-500 mb-1">Claim Amount</p>
+                  <p className="text-lg font-semibold text-emerald-700">
+                    ₦{Number(claim.claimAmount || 0).toLocaleString()}
+                  </p>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                  <p className="text-xs text-gray-500 mb-1">Default Date</p>
+                  <p className="text-sm font-medium text-gray-800">
+                    {claim.defaultDate
+                      ? new Date(claim.defaultDate).toLocaleDateString()
+                      : "—"}
+                  </p>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                  <p className="text-xs text-gray-500 mb-1">Status</p>
+                  {claim.status === "pending_review" ? (
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                      <Clock size={12} className="mr-1" />
+                      Pending Review
+                    </span>
+                  ) : claim.status === "approved" ? (
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                      <CheckCircle size={12} className="mr-1" />
+                      Approved
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                      <XCircle size={12} className="mr-1" />
+                      Rejected
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {claim.defaultReason && (
+                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                  <p className="text-xs text-gray-500 mb-2">Default Reason</p>
+                  <p className="text-sm text-gray-700 line-clamp-2">
+                    {claim.defaultReason}
+                  </p>
+                </div>
+              )}
+
+              {claim.status === "pending_review" && (
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                  <p className="text-sm font-medium text-amber-800 mb-1">
+                    Action Required
+                  </p>
+                  <p className="text-xs text-amber-700">
+                    This claim is pending your review. Click "View Full Details"
+                    to review and make a decision.
+                  </p>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="bg-gray-50 p-6 rounded-lg border border-gray-200 text-center">
+              <FileWarning className="mx-auto text-gray-400 mb-2" size={32} />
+              <p className="text-sm text-gray-600">
+                No claim has been submitted for this application yet.
+              </p>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Business Details */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -361,7 +714,11 @@ export default function ApplicationDetailsPage() {
             <InfoRow label="Guarantee Type" value={application.guaranteeType} />
             <InfoRow
               label="Monthly Revenue"
-              value={application.monthlyRevenue ? `₦${Number(application.monthlyRevenue).toLocaleString()}` : "—"}
+              value={
+                application.monthlyRevenue
+                  ? `₦${Number(application.monthlyRevenue).toLocaleString()}`
+                  : "—"
+              }
             />
             <InfoRow
               label="Proposed Coverage"
@@ -405,7 +762,12 @@ export default function ApplicationDetailsPage() {
                       <DocumentCard
                         title="Valid ID"
                         document={owner.validId}
-                        onPreview={() => handlePreview(owner.validId, `${owner.name}'s Valid ID`)}
+                        onPreview={() =>
+                          handlePreview(
+                            owner.validId,
+                            `${owner.name}'s Valid ID`
+                          )
+                        }
                       />
                     </div>
                   )}
@@ -427,21 +789,48 @@ export default function ApplicationDetailsPage() {
             <DocumentCard
               title="Certificate of Incorporation"
               document={application.documents.incorporationCert}
-              onPreview={() => handlePreview(application.documents.incorporationCert, "Certificate of Incorporation")}
+              onPreview={() =>
+                handlePreview(
+                  application.documents.incorporationCert,
+                  "Certificate of Incorporation"
+                )
+              }
             />
           )}
           {application.documents?.taxClearance && (
             <DocumentCard
               title="Tax Clearance Certificate"
               document={application.documents.taxClearance}
-              onPreview={() => handlePreview(application.documents.taxClearance, "Tax Clearance Certificate")}
+              onPreview={() =>
+                handlePreview(
+                  application.documents.taxClearance,
+                  "Tax Clearance Certificate"
+                )
+              }
             />
           )}
           {application.documents?.performanceBond && (
             <DocumentCard
               title="Performance Bond"
               document={application.documents.performanceBond}
-              onPreview={() => handlePreview(application.documents.performanceBond, "Performance Bond")}
+              onPreview={() =>
+                handlePreview(
+                  application.documents.performanceBond,
+                  "Performance Bond"
+                )
+              }
+            />
+          )}
+          {application.documents?.collateral && (
+            <DocumentCard
+              title="Collateral Documents"
+              document={application.documents.collateral}
+              onPreview={() =>
+                handlePreview(
+                  application.documents.collateral,
+                  "Collateral Documents"
+                )
+              }
             />
           )}
         </div>
@@ -599,10 +988,10 @@ function InfoRow({ label, value }) {
 }
 
 function DocumentCard({ title, document, onPreview }) {
-  if (!document || typeof document !== 'object') return null;
-  
+  if (!document || typeof document !== "object") return null;
+
   return (
-    <div 
+    <div
       className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors cursor-pointer"
       onDoubleClick={onPreview}
     >
@@ -611,7 +1000,9 @@ function DocumentCard({ title, document, onPreview }) {
           <FileText className="text-emerald-600 mt-1" size={20} />
           <div>
             <h4 className="font-medium text-gray-800 text-sm">{title}</h4>
-            <p className="text-xs text-gray-500 mt-1">{document.name || "Document"}</p>
+            <p className="text-xs text-gray-500 mt-1">
+              {document.name || "Document"}
+            </p>
             {document.status === "uploaded" && (
               <span className="inline-flex items-center mt-2 text-xs text-emerald-600">
                 <CheckCircle size={12} className="mr-1" />
@@ -622,7 +1013,7 @@ function DocumentCard({ title, document, onPreview }) {
         </div>
         {document.url && (
           <div className="flex gap-2">
-            <button 
+            <button
               onClick={(e) => {
                 e.stopPropagation();
                 onPreview();
@@ -633,7 +1024,7 @@ function DocumentCard({ title, document, onPreview }) {
             >
               <Eye size={18} />
             </button>
-            <a 
+            <a
               href={document.url}
               download
               target="_blank"
@@ -655,7 +1046,9 @@ function DocumentCard({ title, document, onPreview }) {
 function DocumentPreviewModal({ doc, onClose }) {
   if (!doc) return null;
 
-  const isImage = doc.name?.match(/\.(jpeg|jpg|gif|png)$/i) || doc.url?.match(/\.(jpeg|jpg|gif|png)$/i);
+  const isImage =
+    doc.name?.match(/\.(jpeg|jpg|gif|png)$/i) ||
+    doc.url?.match(/\.(jpeg|jpg|gif|png)$/i);
   const isPdf = doc.name?.match(/\.pdf$/i) || doc.url?.match(/\.pdf$/i);
 
   return (
@@ -691,9 +1084,9 @@ function DocumentPreviewModal({ doc, onClose }) {
         <div className="flex-1 bg-gray-100 overflow-auto flex items-center justify-center p-4">
           {isImage ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img 
-              src={doc.url} 
-              alt="Preview" 
+            <img
+              src={doc.url}
+              alt="Preview"
               className="max-w-full max-h-full object-contain shadow-lg rounded"
             />
           ) : (

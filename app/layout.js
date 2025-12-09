@@ -17,6 +17,7 @@ export const metadata = {
 };
 
 import DocumentationWidget from "./components/DocumentationWidget";
+import WelcomeModal from "./components/WelcomeModal";
 
 export default function RootLayout({ children }) {
   return (
@@ -26,6 +27,7 @@ export default function RootLayout({ children }) {
       >
         {children}
         <DocumentationWidget />
+        <WelcomeModal />
       </body>
     </html>
   );

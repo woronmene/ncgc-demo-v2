@@ -17,6 +17,7 @@ function CredentialModal({ isOpen, onClose }) {
     ncgc_admin: "Manages system settings and onboards banks.",
     ncgc_analyst: "Reviews and approves guarantee applications.",
     bank_maker: "Creates and submits loan guarantee applications.",
+    pfi_onboard: "Onboard your financial institution as a PFI.",
   };
 
   useEffect(() => {
@@ -28,7 +29,7 @@ function CredentialModal({ isOpen, onClose }) {
       .then((res) => res.json())
       .then((data) => {
         if (data.ok) {
-          const allowedRoles = ["ncgc_admin", "ncgc_analyst", "bank_maker"];
+          const allowedRoles = ["ncgc_analyst", "bank_maker", "pfi_onboard"];
           // Filter and maybe deduplicate if needed, but for now just filter by role
           const filtered = data.users.filter((u) =>
             allowedRoles.includes(u.role)
@@ -72,7 +73,10 @@ function CredentialModal({ isOpen, onClose }) {
                 <div className="flex justify-between items-start">
                   <div>
                     <p className="font-medium text-gray-700 text-sm sm:text-base">
-                      {cred.label}
+                      {cred.label ||
+                        cred.name ||
+                        cred.email?.split("@")[0] ||
+                        "User"}
                     </p>
                     <p className="text-xs text-gray-500 mt-1 italic">
                       {roleDescriptions[cred.role] || "System User"}
@@ -246,7 +250,12 @@ export default function AuthLogin() {
         )}; path=/; max-age=86400`;
       }
 
-      router.push(`${encodeURIComponent(data.user.role)}/dashboard`);
+      // Route based on role
+      if (data.user.role === "pfi_onboard") {
+        router.push("/ncgc_admin/dashboard/onboard");
+      } else {
+        router.push(`${encodeURIComponent(data.user.role)}/dashboard`);
+      }
     } catch (err) {
       console.error(err);
       setError("An unexpected error occurred");

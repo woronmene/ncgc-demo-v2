@@ -57,9 +57,10 @@ export async function POST(req) {
         creditScore: payload.creditScore || null,
       },
       documents: payload.documents || {
-        cacDoc: false,
-        statement: false,
-        idDoc: false,
+        incorporationCert: null,
+        taxClearance: null,
+        performanceBond: null,
+        collateral: null,
       },
       status: "pending_ncgc_review",
       ncgc: { approved: false, guaranteePercentage: null, comments: [] },

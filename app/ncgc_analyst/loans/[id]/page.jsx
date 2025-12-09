@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { AlertTriangle, CheckCircle, Info, XCircle, ChevronLeft } from "lucide-react";
+import { AlertTriangle, CheckCircle, Info, XCircle, ChevronLeft, FileWarning, Clock, Eye } from "lucide-react";
 
 export default function LoanDetailsPage() {
   const params = useParams();
@@ -12,9 +12,11 @@ export default function LoanDetailsPage() {
 
   const [loan, setLoan] = useState(null);
   const [schedule, setSchedule] = useState([]);
+  const [claim, setClaim] = useState(null);
   
   // Simulation State
   const [daysPastDue, setDaysPastDue] = useState(0);
+  const [savingDPD, setSavingDPD] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -23,6 +25,23 @@ export default function LoanDetailsPage() {
         const data = await res.json();
         if (data.ok) {
           setLoan(data.application);
+          // Load stored DPD if available
+          if (data.application.loan?.daysPastDue !== undefined) {
+            setDaysPastDue(data.application.loan.daysPastDue);
+          }
+          
+          // Load claim if exists
+          if (data.application.claim?.id) {
+            try {
+              const claimRes = await fetch(`/api/claims/${data.application.claim.id}`);
+              const claimData = await claimRes.json();
+              if (claimData.ok) {
+                setClaim(claimData.claim);
+              }
+            } catch (err) {
+              console.error("Error loading claim:", err);
+            }
+          }
         }
       } catch (e) {
         console.error(e);
@@ -37,6 +56,36 @@ export default function LoanDetailsPage() {
       generateSchedule(loan, daysPastDue);
     }
   }, [loan, daysPastDue]);
+
+  // Save DPD to database when changed (with debounce)
+  useEffect(() => {
+    if (!loan || daysPastDue === (loan.loan?.daysPastDue || 0)) return;
+
+    const timeoutId = setTimeout(async () => {
+      setSavingDPD(true);
+      try {
+        const res = await fetch(`/api/applications/${id}/loan-dpd`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ daysPastDue }),
+        });
+        const data = await res.json();
+        if (data.ok) {
+          // Update local loan state
+          setLoan(prev => ({
+            ...prev,
+            loan: { ...prev.loan, daysPastDue }
+          }));
+        }
+      } catch (err) {
+        console.error("Error saving DPD:", err);
+      } finally {
+        setSavingDPD(false);
+      }
+    }, 500); // Debounce 500ms
+
+    return () => clearTimeout(timeoutId);
+  }, [daysPastDue, id, loan]);
 
   function generateSchedule(app, dpd) {
     const months = Number(app.tenure || app.loanTenor);
@@ -175,9 +224,109 @@ export default function LoanDetailsPage() {
               <span>90d</span>
               <span>180d+</span>
             </div>
+            {savingDPD && (
+              <p className="text-xs text-gray-500 mt-2 text-center">Saving...</p>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Claim Information - Show when DPD > 180 or claim exists */}
+      {(daysPastDue > 180 || claim) && (
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-gray-700 flex items-center">
+              <FileWarning className="text-red-600 mr-2" size={20} />
+              Claim Information
+            </h2>
+            {claim && (
+              <button
+                onClick={() => router.push(`/ncgc_analyst/claims/${claim.id}`)}
+                className="text-sm text-emerald-700 hover:text-emerald-800 font-medium flex items-center gap-1"
+              >
+                View Full Details
+                <ChevronLeft size={16} className="rotate-180" />
+              </button>
+            )}
+          </div>
+
+          {claim ? (
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                  <p className="text-xs text-gray-500 mb-1">Claim Amount</p>
+                  <p className="text-lg font-semibold text-emerald-700">
+                    ₦{Number(claim.claimAmount || 0).toLocaleString()}
+                  </p>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                  <p className="text-xs text-gray-500 mb-1">Default Date</p>
+                  <p className="text-sm font-medium text-gray-800">
+                    {claim.defaultDate 
+                      ? new Date(claim.defaultDate).toLocaleDateString()
+                      : "—"}
+                  </p>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                  <p className="text-xs text-gray-500 mb-1">Status</p>
+                  {claim.status === "pending_review" ? (
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                      <Clock size={12} className="mr-1" />
+                      Pending Review
+                    </span>
+                  ) : claim.status === "approved" ? (
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                      <CheckCircle size={12} className="mr-1" />
+                      Approved
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                      <XCircle size={12} className="mr-1" />
+                      Rejected
+                    </span>
+                  )}
+                </div>
+              </div>
+              
+              {claim.defaultReason && (
+                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                  <p className="text-xs text-gray-500 mb-2">Default Reason</p>
+                  <p className="text-sm text-gray-700 line-clamp-2">{claim.defaultReason}</p>
+                </div>
+              )}
+
+              {claim.status === "pending_review" && (
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                  <p className="text-sm font-medium text-amber-800 mb-1">
+                    Action Required
+                  </p>
+                  <p className="text-xs text-amber-700">
+                    This claim is pending your review. Click "View Full Details" to review and make a decision.
+                  </p>
+                </div>
+              )}
+            </div>
+          ) : daysPastDue > 180 ? (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+              <div className="flex items-start">
+                <AlertTriangle className="text-red-600 mr-3 mt-0.5" size={20} />
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-red-800 mb-1">
+                    Loan in Default
+                  </p>
+                  <p className="text-xs text-red-700 mb-3">
+                    This loan has exceeded 180 days past due and is in default. A claim may be initiated by the PFI.
+                  </p>
+                  <p className="text-xs text-gray-600">
+                    <strong>Note:</strong> Adjust the "Days Past Due" slider above to simulate different scenarios. 
+                    When DPD exceeds 180 days, PFIs can initiate claims for the guaranteed portion.
+                  </p>
+                </div>
+              </div>
+            </div>
+          ) : null}
+        </div>
+      )}
 
       {/* REPAYMENT SCHEDULE */}
       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
