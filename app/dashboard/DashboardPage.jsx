@@ -1,11 +1,12 @@
 "use client";
 
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function DashboardPage() {
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
   const router = useRouter();
-  const role = searchParams.get("role");
+  // const role = searchParams.get("role");
+  const role = "bank-maker";
 
   const roleMeta = {
     "bank-maker": {
