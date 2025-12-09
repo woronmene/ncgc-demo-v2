@@ -357,7 +357,7 @@ export default function DocumentationPage() {
             <div className="border border-gray-200 rounded-lg p-6 bg-purple-50">
               <h3 className="font-semibold text-gray-800 mb-2 flex items-center">
                 <FileText className="mr-2 text-purple-600" size={20} />
-                Bank Maker
+                PFI Maker
               </h3>
               <p className="text-sm text-gray-700">
                 Creates and submits loan guarantee applications on behalf of
@@ -403,7 +403,7 @@ export default function DocumentationPage() {
               </h3>
               <p className="text-gray-700 text-sm">
                 After successful onboarding, you will receive login credentials
-                for your institution (Bank Maker and Bank Approver roles). These
+                for your institution (PFI Maker and PFI Approver roles). These
                 credentials are automatically generated and displayed upon
                 completion. You can copy them for future use.
               </p>
@@ -411,11 +411,11 @@ export default function DocumentationPage() {
 
             <div className="border-l-4 border-purple-500 pl-6 py-2">
               <h3 className="font-semibold text-gray-800 mb-2">
-                Step 3: Login as Bank Maker
+                Step 3: Login as PFI Maker
               </h3>
               <p className="text-gray-700 text-sm">
-                Logout and login as a Bank Maker using the credentials you
-                received during onboarding. You'll see the Bank Maker dashboard
+                Logout and login as a PFI Maker using the credentials you
+                received during onboarding. You'll see the PFI Maker dashboard
                 with options to create new applications.
               </p>
             </div>
@@ -1007,7 +1007,7 @@ export default function DocumentationPage() {
                 PFI: Creating a Claim
               </h3>
               <p className="text-gray-700 text-sm mb-4">
-                From the Bank Maker's application detail page (for approved applications):
+                From the PFI Maker's application detail page (for approved applications):
               </p>
               <ol className="list-decimal pl-6 space-y-2 text-sm text-gray-700">
                 <li>Use the "Days Past Due" slider to simulate loan performance (or wait until DPD exceeds 180 days)</li>

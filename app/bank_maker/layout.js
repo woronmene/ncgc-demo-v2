@@ -113,7 +113,7 @@ export default function BankMakerLayout({ children }) {
           >
             <Menu size={24} />
           </button>
-          <h1 className="text-lg font-semibold text-gray-800">Bank Maker</h1>
+          <h1 className="text-lg font-semibold text-gray-800">PFI Maker</h1>
           <div className="w-6" /> {/* Spacer for centering */}
         </div>
 

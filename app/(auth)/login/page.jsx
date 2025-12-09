@@ -16,7 +16,7 @@ function CredentialModal({ isOpen, onClose }) {
   const roleDescriptions = {
     ncgc_admin: "Manages system settings and onboards banks.",
     ncgc_analyst: "Reviews and approves guarantee applications.",
-    bank_maker: "Creates and submits loan guarantee applications.",
+    bank_maker: "PFI Maker: Creates and submits loan guarantee applications.",
     pfi_onboard: "Onboard your financial institution as a PFI.",
   };
 
